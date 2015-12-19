@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>bdgs</groupId>
+  <artifactId>markattaks</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <inceptionYear>2008</inceptionYear>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-all</artifactId>
+      <version>2.+</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-htmlunit-driver</artifactId>
+      <version>2.48.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.squashtest.ta</groupId>
+        <artifactId>squash-ta-maven-plugin</artifactId>
+        <version>${ta.framework.version}</version>
+
+        <configuration>
+          <!-- Uncomment the line below in order to the build finish in success even if a test failed -->
+          <!-- <alwaysSuccess>true</alwaysSuccess> -->
+
+          <!-- Define a log configuration file (at log4j format) to override the one defined internally -->
+          <!-- If the given file can't be found the engine switch to the internal configuration-->
+          <logConfiguration>${logConfFile}</logConfiguration>
+
+          <!-- Define exporters -->
+          <exporters>
+            <surefire>
+              <jenkinsAttachmentMode>${ta.jenkins.attachment.mode}</jenkinsAttachmentMode>
+            </surefire>
+            <html/>
+          </exporters>
+
+          <!-- Define configurers -->
+          <configurers>
+            <tmCallBack>
+              <endpointURL>${status.update.events.url}</endpointURL>
+              <executionExternalId>${squash.ta.external.id}</executionExternalId>
+              <jobName>${jobname}</jobName>
+              <hostName>${hostname}</hostName>
+              <endpointLoginConfFile>${squash.ta.conf.file}</endpointLoginConfFile>
+              <reportBaseUrl>${ta.tmcallback.reportbaseurl}</reportBaseUrl>          //@since SquashTA framework 1.8.0
+              <jobExecutionId>${ta.tmcallback.jobexecutionid}</jobExecutionId>     //@since SquashTA framework 1.8.0
+              <reportName>${ta.tmcallback.reportname}</reportName>                  //@since SquashTA framework 1.8.0
+            </tmCallBack>
+          </configurers>
+        </configuration>
+
+        <!-- Bind the Squash TA "run" goal to the maven integration-test phase and reuse the default configuration -->
+        <executions>
+          <execution>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <!-- Squash TA maven repository -->
+  <repositories>
+    <repository>
+      <id>org.squashtest.ta.release</id>
+      <name>squashtest test automation - releases</name>
+      <url>http://repo.squashtest.org/maven2/releases</url>
+    </repository>
+  </repositories>
+
+  <!-- Squash TA maven plugin repository -->
+  <pluginRepositories>
+    <pluginRepository>
+      <!-- anciennement org.squashtest.plugins.release -->
+      <id>org.squashtest.ta</id>
+      <name>squashtest.org</name>
+      <url>http://repo.squashtest.org/maven2/releases</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </pluginRepository>
+  </pluginRepositories>
+
+</project>
