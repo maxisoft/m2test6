@@ -1,8 +1,13 @@
+plugins {
+    id 'org.hidetake.ssh' version '1.1.4'
+}
+
 group 'bdgs'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'groovy'
 apply plugin: 'java'
+apply plugin: 'maven'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
 
@@ -13,7 +18,6 @@ repositories {
     mavenCentral()
 }
 
-
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.+'
     testCompile group: 'junit', name: 'junit', version: '4.11'
@@ -21,6 +25,43 @@ dependencies {
 }
 
 
+ssh.settings {
+    dryRun = project.hasProperty('dryRun')
+}
+
+remotes {
+    web01 {
+        role 'master'
+        host = 'm2gl.deptinfo-st.univ-fcomte.fr'
+        user = 'm2test6'
+        identity = file('ssh/id_rsa')
+        knownHosts = allowAnyHosts
+    }
+    web02 {
+        role 'maxime_tunnel'
+        host = '127.0.0.1'
+        port = 22022
+        user = 'm2test6'
+        identity = file('ssh/id_rsa')
+        knownHosts = allowAnyHosts
+    }
+}
+
+task upload << {
+    def tmpDir = "/tmp/wsg6_${UUID.randomUUID()}"
+    def target = "/home/m2test6/public_html/preprod"
+    ssh.run {
+        session(remotes.role('master')) {
+            execute ("mkdir $tmpDir")
+            put from: 'website', into: tmpDir
+            execute("rm -r $target/*")
+            execute ("cp -r $tmpDir/website/* $target") { result ->
+                println "$result"
+            }
+            execute ("rm -r $tmpDir")
+        }
+    }
+}
 
 task testPhp(type: Exec) {
     commandLine 'php', '.bootstrap.atoum.php'
@@ -30,6 +71,15 @@ task testPhpDeployThenSelenium(type: Test, dependsOn: [testPhp, test]) {
 }
 
 test.shouldRunAfter testPhp
+
+task writeNewPom << {
+    pom.writeTo("$buildDir/newpom.xml")
+}
+
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.9'
+}
 
 
 
