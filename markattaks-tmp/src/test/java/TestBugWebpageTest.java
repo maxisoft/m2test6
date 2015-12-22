@@ -12,11 +12,11 @@ public class TestBugWebpageTest {
     public void setUp() throws Exception {
         baseUrl = System.getenv("M2TEST6_BASE_URL");
         if (baseUrl == null) {
-            baseUrl = "http://php-facky.rhcloud.com/markattaks-tmp/website";
+            baseUrl = "https://php-facky.rhcloud.com/markattaks-tmp/website";
         }
-        String httpProxyHost = System.getenv("http.proxyHost");
+        String httpProxyHost = System.getenv("https.proxyHost");
         if (httpProxyHost != null) {
-            int httpProxyPort = Integer.parseInt(System.getenv("http.proxyPort"));
+            int httpProxyPort = Integer.parseInt(System.getenv("https.proxyPort"));
             webClient = new WebClient(BrowserVersion.getDefault(), httpProxyHost, httpProxyPort);
         } else {
             webClient = new WebClient(BrowserVersion.getDefault());
