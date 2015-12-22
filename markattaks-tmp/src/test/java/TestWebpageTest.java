@@ -20,7 +20,10 @@ public class TestWebpageTest {
         if (httpProxyHost != null) {
             int httpProxyPort = Integer.parseInt(System.getenv("https.proxyPort"));
             webClient = new WebClient(BrowserVersion.getDefault(), httpProxyHost, httpProxyPort);
-        } else {
+        } else if (System.getenv("JENKINS_URL") != null) {//TODO try-hard
+            webClient = new WebClient(BrowserVersion.getDefault(), "proxy-web.univ-fcomte.fr", 3128);
+        }
+        else {
             webClient = new WebClient(BrowserVersion.getDefault());
         }
     }
