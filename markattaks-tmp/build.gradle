@@ -12,11 +12,15 @@ apply plugin: 'idea'
 apply plugin: 'eclipse'
 
 
-sourceCompatibility = 1.5
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
 
 repositories {
     mavenCentral()
 }
+
+
+compileJava.options.encoding = 'UTF-8'
 
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.+'
@@ -47,21 +51,25 @@ remotes {
     }
 }
 
-task upload << {
-    def tmpDir = "/tmp/wsg6_${UUID.randomUUID()}"
-    def target = "/home/m2test6/public_html/preprod"
-    ssh.run {
-        session(remotes.role('master')) {
-            execute ("mkdir $tmpDir")
-            put from: 'website', into: tmpDir
-            execute("rm -r $target/*")
-            execute ("cp -r $tmpDir/website/* $target") { result ->
-                println "$result"
+def createUploadToTask(String httpDirTarget) {
+    tasks.create("uploadTo${httpDirTarget.capitalize()}") << {
+        def tmpDir = "/tmp/wsg6_${UUID.randomUUID()}"
+        def target = "/home/m2test6/public_html/$httpDirTarget"
+        ssh.run {
+            session(remotes.role('maxime_tunnel')) {
+                execute ("mkdir $tmpDir")
+                put from: 'website', into: tmpDir
+                execute("rm -r $target/*")
+                execute ("cp -r $tmpDir/website/* $target") { result ->
+                    println "$result"
+                }
+                execute ("rm -r $tmpDir")
             }
-            execute ("rm -r $tmpDir")
         }
     }
 }
+
+['preprod', 'prod', 'test'].each {createUploadToTask(it)}
 
 task testPhp(type: Exec) {
     commandLine 'php', '.bootstrap.atoum.php'

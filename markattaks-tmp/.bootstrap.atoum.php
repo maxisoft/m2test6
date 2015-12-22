@@ -5,4 +5,4 @@ require_once __DIR__ . DIRECTORY_SEPARATOR .'vendor' . DIRECTORY_SEPARATOR . 'at
 // Autoloader.
 require __DIR__ .
         DIRECTORY_SEPARATOR .
-        'autoload.php';
+        'autoload.test.php';

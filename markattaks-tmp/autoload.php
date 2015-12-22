@@ -1,22 +1,41 @@
 <?php
+/**
+ * An example of a project-specific implementation.
+ *
+ * After registering this autoload function with SPL, the following line
+ * would cause the function to attempt to load the \Foo\Bar\Baz\Qux class
+ * from /path/to/project/src/Baz/Qux.php:
+ *
+ *      new \Foo\Bar\Baz\Qux;
+ *
+ * @param string $class The fully-qualified class name.
+ * @return void
+ */
+spl_autoload_register(function ($class) {
 
-spl_autoload_register(function ( $class ) {
+    // project-specific namespace prefix
+    $prefix = 'website\\';
 
-    $root = __DIR__;
+    // base directory for the namespace prefix
+    $base_dir = __DIR__ . DIRECTORY_SEPARATOR . 'website' . DIRECTORY_SEPARATOR;
 
-    if('Test' === substr($class, 0, strpos($class, '\\')))
-        $root = dirname(__DIR__);
-
-    $to_include = $root . DIRECTORY_SEPARATOR .
-            str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
-
-    if('Test' === substr($class, 0, strpos($class, '\\'))){
-      $tmp = strrchr($to_include, DIRECTORY_SEPARATOR);
-      $tmp1 = strripos($to_include, DIRECTORY_SEPARATOR);
-      $subtmp = substr($to_include, 0, $tmp1);
-      $to_include = $subtmp . DIRECTORY_SEPARATOR . "tests" .
-                    DIRECTORY_SEPARATOR . "units" . $tmp;
+    // does the class use the namespace prefix?
+    $len = strlen($prefix);
+    if (strncmp($prefix, $class, $len) !== 0) {
+        // no, move to the next registered autoloader
+        return;
     }
-      
-    require $to_include;
+
+    // get the relative class name
+    $relative_class = substr($class, $len);
+
+    // replace the namespace prefix with the base directory, replace namespace
+    // separators with directory separators in the relative class name, append
+    // with .php
+    $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+
+    // if the file exists, require it
+    if (file_exists($file)) {
+        require $file;
+    }
 });
