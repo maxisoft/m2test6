@@ -1,12 +1,14 @@
+import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 public class TestWebpageTest {
-
     private String baseUrl;
+    private WebClient webClient;
 
     @Before
     public void setUp() throws Exception {
@@ -14,16 +16,27 @@ public class TestWebpageTest {
         if (baseUrl == null) {
             baseUrl = "http://php-facky.rhcloud.com/markattaks-tmp/website";
         }
+        String httpProxyHost = System.getenv("http.proxyHost");
+        if (httpProxyHost != null) {
+            int httpProxyPort = Integer.parseInt(System.getenv("http.proxyPort"));
+            webClient = new WebClient(BrowserVersion.getDefault(), httpProxyHost, httpProxyPort);
+        } else {
+            webClient = new WebClient(BrowserVersion.getDefault());
+        }
+    }
+
+    @After
+    public void tearDown() {
+        webClient.close();
     }
 
     @Test
     public void testGET() throws Exception {
-        try (WebClient webClient = new WebClient()) {
-            Page page = webClient.getPage(baseUrl + "/test.php");
-            String content = page.getWebResponse().getContentAsString();
-            Assert.assertEquals("text/plain", page.getWebResponse().getContentType());
-            Assert.assertEquals("1", content);
-        }
+        Page page = webClient.getPage(baseUrl + "/test.php");
+        String content = page.getWebResponse().getContentAsString();
+        Assert.assertEquals("text/plain", page.getWebResponse().getContentType());
+        Assert.assertEquals("1", content);
+
 
     }
 
