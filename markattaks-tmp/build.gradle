@@ -12,8 +12,8 @@ apply plugin: 'idea'
 apply plugin: 'eclipse'
 
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
@@ -51,12 +51,18 @@ remotes {
     }
 }
 
+def autoRemoteTarget() {
+    System.getenv('M2TEST6_SSH_REMOTE') ?:
+      System.getenv('JENKINS_URL') ? 'master' :
+        System.getenv('TUNNEL_MAXIME') ? 'maxime_tunnel' : 'master'
+}
+
 def createUploadToTask(String httpDirTarget) {
     tasks.create("uploadTo${httpDirTarget.capitalize()}") << {
         def tmpDir = "/tmp/wsg6_${UUID.randomUUID()}"
         def target = "/home/m2test6/public_html/$httpDirTarget"
         ssh.run {
-            session(remotes.role('maxime_tunnel')) {
+            session(remotes.role(autoRemoteTarget())) {
                 execute ("mkdir $tmpDir")
                 put from: 'website', into: tmpDir
                 execute("rm -r $target/*")
