@@ -9,7 +9,7 @@ class DBInst
     private static $instance = null;
     private static $cachedDBName = null;
 
-    const DEFAULT_HOST = '127.0.0.1';
+    const DEFAULT_HOST = 'localhost';
     const DEFAULT_PORT = '3306';
     const DEFAULT_USER = 'm2test6';
     const DEFAULT_PASSWORD = 'm2test6';
