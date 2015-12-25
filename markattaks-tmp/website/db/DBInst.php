@@ -55,6 +55,9 @@ class DBInst
         return self::$cachedDBName;
     }
 
+    /**
+     * @return PDO
+     */
     public static function getInstance()
     {
         if (is_null(self::$instance)) {

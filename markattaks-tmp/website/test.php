@@ -1,5 +1,7 @@
 <?php
-$common = require_once 'Common.php';
+require_once 'Common.php';
+
+$common = \website\Common::getInstance();
 
 try {
     header('Content-Type: text/plain');
