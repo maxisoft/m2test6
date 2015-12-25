@@ -8,7 +8,7 @@ class DBInst extends atoum {
         $mustReturn = "*@xn";
         $this
         ->given($this->newTestedInstance())
-        ->if($this->function->getenv = false)
+        ->if($this->function->getenv = false) // mock php's getenv function
         ->then
             ->string($this->testedInstance->getFirstEnvVar($mustReturn, "env"))
                 ->isEqualTo($mustReturn);
@@ -19,8 +19,8 @@ class DBInst extends atoum {
         $default = "THIS IS BAD";
         $this
         ->given($this->newTestedInstance())
-        ->if($this->function->getenv[0] = false)
-        ->if($this->function->getenv[1] = $mustReturn)
+        ->if($this->function->getenv[0] = false) // mock php's getenv function
+        ->if($this->function->getenv[1] = $mustReturn)// mock php's getenv function
         ->then
             ->string($this->testedInstance->getFirstEnvVar($default, "MISSING", "IN_ENV"))
                 ->isEqualTo($mustReturn);
@@ -30,7 +30,7 @@ class DBInst extends atoum {
         $mustReturn = \website\db\DBInst::DEFAULT_HOST;
         $this
         ->given($this->newTestedInstance())
-        ->if($this->function->getenv = false)
+        ->if($this->function->getenv = false) // mock php's getenv function
         ->then
         ->string($this->testedInstance->getHost())
         ->isEqualTo($mustReturn);
@@ -40,7 +40,7 @@ class DBInst extends atoum {
         $mustReturn = \website\db\DBInst::DEFAULT_PORT;
         $this
         ->given($this->newTestedInstance())
-        ->if($this->function->getenv = false)
+        ->if($this->function->getenv = false) // mock php's getenv function
         ->then
         ->string($this->testedInstance->getPort())
         ->isEqualTo($mustReturn);
@@ -50,7 +50,7 @@ class DBInst extends atoum {
         $mustReturn = \website\db\DBInst::DEFAULT_USER;
         $this
         ->given($this->newTestedInstance())
-        ->if($this->function->getenv = false)
+        ->if($this->function->getenv = false) // mock php's getenv function
         ->then
         ->string($this->testedInstance->getUsername())
         ->isEqualTo($mustReturn);
@@ -60,10 +60,24 @@ class DBInst extends atoum {
         $mustReturn = \website\db\DBInst::DEFAULT_PASSWORD;
         $this
         ->given($this->newTestedInstance())
-        ->if($this->function->getenv = false)
+        ->if($this->function->getenv = false) // mock php's getenv function
         ->then
         ->string($this->testedInstance->getPassword())
         ->isEqualTo($mustReturn);
+    }
+
+    public function testDefaultGetDBName ( ) {
+        $mustReturn = \website\db\DBInst::DEFAULT_DB_NAME;
+        $this
+        ->given($this->newTestedInstance())
+        ->if($this->function->getenv = false) // mock php's getenv function
+        ->then
+        ->string($this->testedInstance->getDBName())
+        ->isEqualTo($mustReturn);
+    }
+
+    public function testGetInstance ( ) {
+        //TODO don't know how
     }
 
 }
