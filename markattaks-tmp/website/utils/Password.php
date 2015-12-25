@@ -17,8 +17,20 @@ class Password
         return true;
     }
 
-    protected static function badPassword($message)
+
+    public static function hash($password, $validate=true)
     {
-        throw new PasswordException($message);
+        $validate and self::validate($password);
+        return \password_hash($password, PASSWORD_DEFAULT);
+    }
+
+    public static function verify($password, $hash)
+    {
+        return \password_verify($password, $hash);
+    }
+
+    protected static function badPassword($message, $code=0)
+    {
+        throw new PasswordException($message, $code);
     }
 }

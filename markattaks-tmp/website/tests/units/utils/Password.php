@@ -15,6 +15,55 @@ class Password extends atoum {
         ;
     }
 
+    public function testHashPassword ( ) {
+        $password = "okanvoabvkjabi";
+        $this
+        ->given($this->newTestedInstance())
+        ->then
+        ->string($this->testedInstance->hash($password, false))
+        ->isNotEqualTo($password)
+        ;
+    }
+
+    public function test2ndTimeHashedPasswordNotTheSame ( ) {
+        $password = "okanvoabvkjabi";
+        $this
+        ->given($this->newTestedInstance())
+        ->then
+        ->string($this->testedInstance->hash($password, false))
+        ->isNotEqualTo($this->testedInstance->hash($password, false))
+        ;
+    }
+
+    public function testVerifyHashPassword ( ) {
+        $password = "okanvoabvkjabi";
+        $this
+        ->given($this->newTestedInstance())
+        ->given($hashed = $this->testedInstance->hash($password, false))
+        ->then
+        ->boolean($this->testedInstance->verify($password, $hashed))
+        ->isEqualTo(true)
+        ;
+    }
+
+
+    public function testHashNotAValidPassword ( ) {
+        $password = str_repeat("h", \website\utils\Password::MIN_LEN - 1);
+        $this
+        ->given($this->newTestedInstance())
+        ->then
+        ->exception(
+            function() use($password) {
+                // ce code lève une exception
+                $this->testedInstance->hash($password, true);
+            }
+        )
+        ->isInstanceof('\website\utils\PasswordException')
+        ->message->isEqualTo('too short')
+        ;
+    }
+
+
 
     public function testValidateNotAPasswordString ( ) {
         $password = null;
