@@ -6,7 +6,7 @@ use \atoum;
     use website\model\User;
 
     const DROP_TABLE = 'DROP TABLE IF EXISTS `USER`';
-    const CREATE_TABLE_SQL = 'CREATE TABLE IF NOT EXISTS user (
+    const CREATE_TABLE_SQL = 'CREATE TABLE IF NOT EXISTS `USER` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `login` VARCHAR(45) NOT NULL,
   `password` VARCHAR(255) NOT NULL,
