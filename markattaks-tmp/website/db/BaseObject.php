@@ -80,7 +80,7 @@ abstract class BaseObject
                         $input_parameters[] = $v;
                     }
                     return self::findWhere($keys, $input_parameters, $limit, $projection);
-                }else{
+                } else {
                     foreach ($where as $e) {
                         $tmp .= ',';
                         $tmp .= $e . ' = ?';
@@ -173,30 +173,27 @@ abstract class BaseObject
             throw new \RuntimeException("there's no changes on object. Can't save current object");
         }
 
-        $query = $this->isUpdateMode() ? $this->updateQuery() :$this->insertQuery();
+        $query = $this->isUpdateMode() ? $this->updateQuery() : $this->insertQuery();
         $st = $this->db()->prepare($query);
-        try {
-            $input_parameters = &$this->_modificationMap;
-            if ($this->isUpdateMode()) {
-                $input_parameters = $this->_modificationMap;
-                foreach ($this->primaryKeysMapping() as $k => $v) {
-                    $input_parameters[$k] = $v;
-                }
+        $input_parameters = &$this->_modificationMap;
+        if ($this->isUpdateMode()) {
+            $input_parameters = $this->_modificationMap;
+            foreach ($this->primaryKeysMapping() as $k => $v) {
+                $input_parameters[$k] = $v;
             }
-            $ret = $st->execute($input_parameters);
-            if ($ret) {
-                if (!$this->isUpdateMode()) {
-                    $this->onInsert();
-                    $this->setUpdateMode();
-                } else {
-                    $this->onUpdate();
-                }
-                $this->resetModification();
-            }
-            return $ret;
-        } finally {
-            $st->closeCursor();
         }
+        $ret = $st->execute($input_parameters);
+        $st->closeCursor();
+        if ($ret) {
+            if (!$this->isUpdateMode()) {
+                $this->onInsert();
+                $this->setUpdateMode();
+            } else {
+                $this->onUpdate();
+            }
+            $this->resetModification();
+        }
+        return $ret;
     }
 
     public function setUpdateMode()
@@ -235,6 +232,7 @@ class __Undef
     {
 
     }
+
     public function __toString()
     {
         return "UNDEF";

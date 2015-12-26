@@ -235,7 +235,7 @@ ENGINE = InnoDB;';
                     ->isFalse();
 
             $this
-            ->given($undef = new __Undef()) //any another instance of Undef too
+            ->given($undef = new __Undef()) //any another instance of Undef doesn't work
             ->then
             ->boolean(\website\db\BaseObject::isUndef($undef))
                 ->isFalse();
