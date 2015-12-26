@@ -77,7 +77,10 @@ class DBInst extends atoum {
     }
 
     public function testGetInstance ( ) {
-        //TODO don't know how
+        $this
+        ->object(\website\db\DBInst::getInstance())
+        ->isInstanceOf('\PDO')
+        ->isIdenticalTo(\website\db\DBInst::getInstance());
     }
 
 }
