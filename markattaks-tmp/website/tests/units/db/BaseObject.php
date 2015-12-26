@@ -5,8 +5,8 @@ namespace website\db\tests\units {
     use atoum;
     use website\db\__Undef;
     use website\db\DBTrait;
-    const DROP_TABLE = 'DROP TABLE IF EXISTS Dummy';
-    const CREATE_TABLE_SQL = 'CREATE TABLE IF NOT EXISTS Dummy (
+    const DROP_TABLE = 'DROP TABLE IF EXISTS `DUMMY`';
+    const CREATE_TABLE_SQL = 'CREATE TABLE IF NOT EXISTS `DUMMY` (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   data1 VARCHAR(45) NOT NULL,
   data2 VARCHAR(255),

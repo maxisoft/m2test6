@@ -37,7 +37,7 @@ abstract class BaseObject
 
     public static function tableName()
     {
-        return (new \ReflectionClass(get_called_class()))->getShortName();
+        return strtoupper((new \ReflectionClass(get_called_class()))->getShortName());
     }
 
     public function hasChanges()
