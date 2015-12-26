@@ -2,6 +2,7 @@
 
 namespace website\utils;
 
+require_once 'autoload.php';
 
 use website\model\User;
 

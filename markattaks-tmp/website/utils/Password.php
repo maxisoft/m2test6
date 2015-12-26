@@ -2,7 +2,7 @@
 
 namespace website\utils;
 include_once 'lib/passwordLib.php';
-include 'autoload.php';
+require_once 'autoload.php';
 
 class Password
 {
