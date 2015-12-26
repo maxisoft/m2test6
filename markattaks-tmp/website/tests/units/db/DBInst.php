@@ -82,7 +82,6 @@ class DBInst extends atoum {
         ->isInstanceOf('\PDO')
         ->isIdenticalTo(\website\db\DBInst::getInstance());
     }
-
 }
 
 }
