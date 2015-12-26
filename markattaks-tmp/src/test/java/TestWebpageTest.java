@@ -39,8 +39,6 @@ public class TestWebpageTest {
         String content = page.getWebResponse().getContentAsString();
         Assert.assertEquals("text/plain", page.getWebResponse().getContentType());
         Assert.assertEquals("1", content);
-
-
     }
 
 }
