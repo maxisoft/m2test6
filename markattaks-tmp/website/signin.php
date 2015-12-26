@@ -61,7 +61,7 @@ $session->flushAndClose();
 <body>
 
 <div class="container">
-    <form class="form-signin" action="" method="post">
+    <form name="signin" class="form-signin" action="" method="post">
         <h2 class="form-signin-heading">Please sign in</h2>
         <?php if($loginStatus === false):?>
             <div class="alert alert-danger" role="alert">
@@ -80,7 +80,7 @@ $session->flushAndClose();
                 <input type="checkbox" value="remember-me"> Remember me
             </label>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" name="submitbutton">Sign in</button>
     </form>
 </div>
 <!-- /container -->
