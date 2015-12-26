@@ -6,7 +6,7 @@ $session = new \website\utils\Session();
 
 
 if ($session->isLogged()) {
-    header('Location: index.php');
+    header('Location: .');
     exit;
 }
 
@@ -21,7 +21,7 @@ if ($method == 'POST' && isset($_POST['login']) && isset($_POST['password'])) {
     $loginStatus = $session->login($login, $password);
 
     if ($loginStatus === true) {
-        header('Location: index.php');
+        header('Location: .');
         exit;
     }
 }
@@ -64,7 +64,7 @@ $session->flushAndClose();
     <form name="signin" class="form-signin" action="" method="post">
         <h2 class="form-signin-heading">Please sign in</h2>
         <?php if($loginStatus === false):?>
-            <div class="alert alert-danger" role="alert">
+            <div class="alert alert-danger" role="alert" id="loginError">
                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                 <span class="sr-only">Error:</span>
                 Failed to login: Bad login
