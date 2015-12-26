@@ -1,4 +1,6 @@
 <?php
+    include_once 'Common.php';
+    $session = new \website\utils\Session();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,7 +31,15 @@
 <body>
 
 <div class="container">
-    Hey buddy.<br/>
+    Hey <span id="greetingUserName">
+    <?php if($session->isLogged()):
+        $user = \website\model\User::findOneWhere('id = ?', $session['user.id'], 'login');
+        echo htmlentities($user->getLogin());
+    else:?>
+        buddy
+    <?php endif?>
+    </span>.
+    <br/>
     There's hard work over here.
 </div>
 <!-- /container -->

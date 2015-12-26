@@ -96,6 +96,9 @@ abstract class BaseObject
         }
         $st = self::db()->prepare($query);
         $st->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, get_called_class());
+        if (is_string($input_parameters)) {
+            $input_parameters = array($input_parameters);
+        }
         $res = $st->execute($input_parameters);
         if (!$res) {
             return $res;
