@@ -5,11 +5,11 @@ use \atoum;
     use website\db\DBTrait;
     use website\model\User;
 
-    const DROP_TABLE = 'DROP TABLE IF EXISTS user';
+    const DROP_TABLE = 'DROP TABLE IF EXISTS `USER`';
     const CREATE_TABLE_SQL = 'CREATE TABLE IF NOT EXISTS user (
-  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  login VARCHAR(45) NOT NULL,
-  password VARCHAR(255) NOT NULL,
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `login` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
   PRIMARY KEY (id))
 ENGINE = InnoDB;';
 
