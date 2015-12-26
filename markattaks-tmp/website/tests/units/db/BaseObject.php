@@ -12,7 +12,6 @@ namespace website\db\tests\units {
   data2 VARCHAR(255),
   PRIMARY KEY (id))
 ENGINE = InnoDB;';
-    const TRUNCATE_TABLE_SQL = 'TRUNCATE Dummy';
 
     class BaseObject extends atoum
     {
