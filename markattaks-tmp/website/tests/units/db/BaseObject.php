@@ -209,10 +209,16 @@ ENGINE = InnoDB;';
             ->given($arr = ["0"=>1, 1=>2, '2'=>4])
             ->then
                 ->boolean(\website\db\BaseObject::isAssoc($arr))
-                ->isFalse();
+                    ->isFalse();
 
             $this
-            ->given($arr = ["a"=> 1,1 => 2, 2=>4])
+            ->given($arr = [1=>1, 3=>2, 4=>4])
+            ->then
+                ->boolean(\website\db\BaseObject::isAssoc($arr))
+                    ->isTrue();
+
+            $this
+            ->given($arr = ["a"=>1, 1=>2, 2=>4])
                 ->then
                 ->boolean(\website\db\BaseObject::isAssoc($arr))
                     ->isTrue();
