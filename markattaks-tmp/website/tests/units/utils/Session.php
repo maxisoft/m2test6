@@ -12,6 +12,8 @@ use \atoum;
   `password` VARCHAR(255) NOT NULL,
   PRIMARY KEY (id))
 ENGINE = MEMORY;';
+
+
     class Session extends atoum {
     use DBTrait;
 

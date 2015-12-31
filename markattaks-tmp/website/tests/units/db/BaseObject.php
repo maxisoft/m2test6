@@ -53,7 +53,7 @@ ENGINE = MEMORY;';
 
         public function tearDown()
         {
-            //$this->db()->exec(DROP_TABLE);
+            $this->db()->exec(DROP_TABLE);
         }
 
         public function testConstruct()
@@ -441,6 +441,25 @@ ENGINE = MEMORY;';
             ->then
                 ->variable($result)
                     ->isNull();
+        }
+
+        public function testMagicMethodSet()
+        {
+            $this
+            ->given($instance = new Dummy())
+            ->then
+                ->variable($instance->data1 = 'test');
+        }
+
+        public function testMagicMethodSetFail()
+        {
+            $this
+            ->given($instance = new Dummy())
+            ->then
+                ->exception(function () use($instance) {
+                    $instance->attrThatDoesntExists = 'must fail';
+                })
+                    ->message->contains("doesn't exists");
         }
     }
 
