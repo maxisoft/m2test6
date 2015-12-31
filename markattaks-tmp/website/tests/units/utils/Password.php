@@ -4,6 +4,9 @@ namespace website\utils\tests\units {
 use \atoum;
 class Password extends atoum {
 
+    public function setUp()
+    {
+    }
 
     public function testValidatePassword ( ) {
         $password = "okanvoabvkjabi";

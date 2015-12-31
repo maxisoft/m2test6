@@ -8,6 +8,7 @@ class Password
 {
     const MIN_LEN = 8;
     const MAX_LEN = 254;
+    private static $hash_options = array();
 
     public static function validate($password)
     {
@@ -22,7 +23,7 @@ class Password
     public static function hash($password, $validate=true)
     {
         $validate and self::validate($password);
-        return \password_hash($password, PASSWORD_DEFAULT);
+        return \password_hash($password, PASSWORD_DEFAULT, self::$hash_options);
     }
 
     public static function verify($password, $hash)
