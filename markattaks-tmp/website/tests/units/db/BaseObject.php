@@ -5,14 +5,14 @@ namespace website\db\tests\units {
     use atoum;
     use website\db\__Undef;
     use website\db\DBTrait;
-    const DROP_TABLE = 'DROP TABLE IF EXISTS `DUMMY`';
-    const CREATE_TABLE_SQL = 'CREATE TABLE IF NOT EXISTS `DUMMY` (
+    const DROP_TABLE = 'DROP TABLE IF EXISTS DUMMY';
+    const CREATE_TABLE_SQL = 'CREATE TABLE IF NOT EXISTS DUMMY (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   data1 VARCHAR(45) NOT NULL,
   data2 VARCHAR(255),
   PRIMARY KEY (id))
-ENGINE = InnoDB;';
-    const DELETE_ALL_TABLE_CONTENT = 'DELETE FROM `DUMMY`';
+ENGINE = MEMORY;';
+    const DELETE_ALL_TABLE_CONTENT = 'DELETE FROM DUMMY';
 
     class BaseObject extends atoum
     {
@@ -51,7 +51,7 @@ ENGINE = InnoDB;';
 
         public function tearDown()
         {
-            $this->db()->exec(DROP_TABLE);
+            //$this->db()->exec(DROP_TABLE);
         }
 
         public function testConstruct()
