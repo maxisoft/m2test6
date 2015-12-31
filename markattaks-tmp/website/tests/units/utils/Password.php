@@ -2,6 +2,9 @@
 
 namespace website\utils\tests\units {
 use \atoum;
+/**
+ * @engine inline
+ */
 class Password extends atoum {
 
     public function setUp()

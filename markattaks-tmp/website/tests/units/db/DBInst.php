@@ -2,6 +2,7 @@
 
 namespace website\db\tests\units {
 use \atoum;
+    
 class DBInst extends atoum {
 
     public function testGetFirstEnvVarValueDefault ( ) {

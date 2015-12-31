@@ -5,15 +5,17 @@ namespace website\db\tests\units {
     use atoum;
     use website\db\__Undef;
     use website\db\DBTrait;
-    const DROP_TABLE = 'DROP TABLE IF EXISTS `DUMMY`';
-    const CREATE_TABLE_SQL = 'CREATE TABLE IF NOT EXISTS `DUMMY` (
+    const DROP_TABLE = 'DROP TABLE IF EXISTS DUMMY';
+    const CREATE_TABLE_SQL = 'CREATE TABLE IF NOT EXISTS DUMMY (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   data1 VARCHAR(45) NOT NULL,
   data2 VARCHAR(255),
   PRIMARY KEY (id))
 ENGINE = MEMORY;';
-    const DELETE_ALL_TABLE_CONTENT = 'DELETE FROM `DUMMY`';
-
+    const DELETE_ALL_TABLE_CONTENT = 'DELETE FROM DUMMY';
+    /**
+     * @engine inline
+     */
     class BaseObject extends atoum
     {
         use DBTrait;
@@ -24,13 +26,13 @@ ENGINE = MEMORY;';
             $this->resetDB();
         }
 
-        /*public function beforeTestMethod($method)
+        public function beforeTestMethod($method)
         {
             // Exécutée *avant chaque* méthode de test.
             if (self::startsWith($method, 'testFind')) {
                 $this->cleanDB();
             }
-        }*/
+        }
 
         function resetDB()
         {
@@ -287,8 +289,6 @@ ENGINE = MEMORY;';
 
         public function testFind()
         {
-            $this->cleanDB();
-
             $instance = $this->testSaveAndRetrieveBack();
 
             $this
@@ -302,8 +302,6 @@ ENGINE = MEMORY;';
 
         public function testFindWithLimit()
         {
-            $this->cleanDB();
-
             $lim = 10;
 
             //insert $lim + 1 elements
@@ -323,8 +321,6 @@ ENGINE = MEMORY;';
 
         public function testFindWithoutData()
         {
-            $this->cleanDB();
-
             $this
             ->given($result = Dummy::find())
             ->then
@@ -334,8 +330,6 @@ ENGINE = MEMORY;';
 
         public function testFindWhere()
         {
-            $this->cleanDB();
-
             $instance = $this->testSaveAndRetrieveBack();
 
             $this
@@ -349,8 +343,6 @@ ENGINE = MEMORY;';
 
         public function testFindWhereWithEmptyResult()
         {
-            $this->cleanDB();
-
             $this
             ->given($result = Dummy::findWhere('0 = 1'))
                 ->then
@@ -360,8 +352,6 @@ ENGINE = MEMORY;';
 
         public function testFindWhereAlternativeSyntax1()
         {
-            $this->cleanDB();
-
             $instance = $this->testSaveAndRetrieveBack();
             $this
             ->given($result = Dummy::findWhere(['id'], [$instance->getId()]))
@@ -374,8 +364,6 @@ ENGINE = MEMORY;';
 
         public function testFindWhereAlternativeSyntax3()
         {
-            $this->cleanDB();
-
             $instance = $this->testSaveAndRetrieveBack();
             $this
             ->given($result = Dummy::findWhere('id = ?', [$instance->getId()]))
@@ -388,8 +376,6 @@ ENGINE = MEMORY;';
 
         public function testFindWhereAlternativeSyntax4()
         {
-            $this->cleanDB();
-
             $instance = $this->testSaveAndRetrieveBack();
             $this
             ->given($result = Dummy::findWhere('id = :id', ['id' => $instance->getId()]))
@@ -402,8 +388,6 @@ ENGINE = MEMORY;';
 
         public function testFindWhereLimit()
         {
-            $this->cleanDB();
-
             $lim = 10;
 
             //insert $lim + 1 elements
@@ -423,8 +407,6 @@ ENGINE = MEMORY;';
 
         public function testFindWhereProjection()
         {
-            $this->cleanDB();
-
             $instance = $this->testSaveAndRetrieveBack();
             $this
             ->given($result = Dummy::findWhere(['id'], [$instance->getId()], null, ['id', 'data2']))
@@ -443,8 +425,6 @@ ENGINE = MEMORY;';
 
         public function testFindOneWhere()
         {
-            $this->cleanDB();
-
             $instance = $this->testSaveAndRetrieveBack();
 
             $this
@@ -456,8 +436,6 @@ ENGINE = MEMORY;';
 
         public function testFindOneWhereNoResult()
         {
-            $this->cleanDB();
-
             $this
             ->given($result = Dummy::findOneWhere('id < ?', [0]))
             ->then
