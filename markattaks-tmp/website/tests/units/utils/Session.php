@@ -11,7 +11,7 @@ use \atoum;
   `login` VARCHAR(45) NOT NULL,
   `password` VARCHAR(255) NOT NULL,
   PRIMARY KEY (id))
-ENGINE = InnoDB;';
+ENGINE = MEMORY;';
 
     class Session extends atoum {
     use DBTrait;
@@ -30,7 +30,6 @@ ENGINE = InnoDB;';
     public function testLogin()
     {
         $this->db()->exec(join(';', [DROP_TABLE, CREATE_TABLE_SQL]));
-
         $this
         ->given($user = new User())
             ->if($user->login = "toto")
@@ -149,8 +148,6 @@ ENGINE = InnoDB;';
             ->boolean(isset($this->testedInstance['test']))
                 ->isFalse();
     }
-
-
 }
 
 }

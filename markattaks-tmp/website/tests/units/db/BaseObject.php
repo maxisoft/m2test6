@@ -11,7 +11,8 @@ namespace website\db\tests\units {
   data1 VARCHAR(45) NOT NULL,
   data2 VARCHAR(255),
   PRIMARY KEY (id))
-ENGINE = InnoDB;';
+ENGINE = MEMORY;';
+    const DELETE_ALL_TABLE_CONTENT = 'DELETE FROM `DUMMY`';
 
     class BaseObject extends atoum
     {
@@ -20,8 +21,33 @@ ENGINE = InnoDB;';
         public function setUp()
         {
             putenv("MYSQL_DB_NAME=m2test6-utest");
+            $this->resetDB();
+        }
+
+        public function beforeTestMethod($method)
+        {
+            // Exécutée *avant chaque* méthode de test.
+            if (self::startsWith($method, 'testFind')) {
+                $this->cleanDB();
+            }
+        }
+
+        function resetDB()
+        {
             $this->db()->exec(join(';', [DROP_TABLE, CREATE_TABLE_SQL]));
         }
+
+        function cleanDB()
+        {
+            $this->db()->exec(DELETE_ALL_TABLE_CONTENT);
+        }
+
+        static function startsWith($haystack, $needle)
+        {
+            $length = strlen($needle);
+            return (substr($haystack, 0, $length) === $needle);
+        }
+
 
         public function tearDown()
         {
@@ -57,7 +83,7 @@ ENGINE = InnoDB;';
 
             //alter obj
             $this
-            ->given($testedInstance = new Dummy())
+            ->given($testedInstance)
                 ->if($testedInstance->data1 = "test")
             ->then
                 ->boolean($testedInstance->hasChanges())
@@ -81,9 +107,9 @@ ENGINE = InnoDB;';
             //can't alter primary key if updateMode's active
             $this
             ->given($testedInstance = new Dummy())
+            ->if($testedInstance->setUpdateMode())
             ->then
                 ->exception(function() use($testedInstance) {
-                    $testedInstance->setUpdateMode();
                     $testedInstance->id = 3;
                 })
                     ->message->isEqualTo('do not modify primary key')
@@ -180,7 +206,6 @@ ENGINE = InnoDB;';
 
         public function testSaveThenUpdateWithoutPrimaryKeyMapping()
         {
-
             $this
             ->given($testedInstance = $this->testSaveWithoutPrimaryKeyMapping())
                 ->if($testedInstance->data2 = "throw exception")
@@ -240,7 +265,7 @@ ENGINE = InnoDB;';
                     ->isFalse();
 
             $this
-            ->given($undef = new __Undef()) //any another instance of Undef doesn't work
+            ->given($undef = new __Undef()) //any another Undef instance doesn't work
             ->then
             ->boolean(\website\db\BaseObject::isUndef($undef))
                 ->isFalse();
@@ -257,7 +282,163 @@ ENGINE = InnoDB;';
                 ->if($testedInstance->setUpdateMode())
                 ->then
                     ->boolean($testedInstance->isUpdateMode())
+                        ->isTrue();
+        }
+
+        public function testFind()
+        {
+            $instance = $this->testSaveAndRetrieveBack();
+
+            $this
+            ->given($result = Dummy::find())
+            ->then
+                ->integer(sizeof($result))
+                    ->isEqualTo(1)
+                ->array($result)
+                    ->contains($instance);
+        }
+
+        public function testFindWithLimit()
+        {
+            $lim = 10;
+
+            //insert $lim + 1 elements
+            $acc = [];
+            for( $i=0 ; $i < $lim + 1; $i++ ) {
+                $acc[] = $this->testSaveAndRetrieveBack();
+            }
+
+            $this
+            ->given($result = Dummy::find($lim))
+            ->then
+                ->integer(sizeof($result))
+                    ->isEqualTo($lim)
+                ->array($result)
+                    ->containsValues(array_slice($acc, 0, $lim));
+        }
+
+        public function testFindWithoutData()
+        {
+            $this
+            ->given($result = Dummy::find())
+            ->then
+                ->boolean(empty($result))
                     ->isTrue();
+        }
+
+        public function testFindWhere()
+        {
+            $instance = $this->testSaveAndRetrieveBack();
+
+            $this
+            ->given($result = Dummy::findWhere(['id' => $instance->getId()]))
+            ->then
+                ->integer(sizeof($result))
+                    ->isEqualTo(1)
+                ->array($result)
+                    ->contains($instance);
+        }
+
+        public function testFindWhereWithEmptyResult()
+        {
+            $this
+            ->given($result = Dummy::findWhere('0 = 1'))
+                ->then
+                ->boolean(empty($result))
+                    ->isTrue();
+        }
+
+        public function testFindWhereAlternativeSyntax1()
+        {
+            $instance = $this->testSaveAndRetrieveBack();
+            $this
+            ->given($result = Dummy::findWhere(['id'], [$instance->getId()]))
+            ->then
+                ->integer(sizeof($result))
+                    ->isEqualTo(1)
+                ->array($result)
+                    ->contains($instance);
+        }
+
+        public function testFindWhereAlternativeSyntax3()
+        {
+            $instance = $this->testSaveAndRetrieveBack();
+            $this
+            ->given($result = Dummy::findWhere('id = ?', [$instance->getId()]))
+            ->then
+                ->integer(sizeof($result))
+                    ->isEqualTo(1)
+                ->array($result)
+                    ->contains($instance);
+        }
+
+        public function testFindWhereAlternativeSyntax4()
+        {
+            $instance = $this->testSaveAndRetrieveBack();
+            $this
+            ->given($result = Dummy::findWhere('id = :id', ['id' => $instance->getId()]))
+            ->then
+                ->integer(sizeof($result))
+                    ->isEqualTo(1)
+                ->array($result)
+                    ->contains($instance);
+        }
+
+        public function testFindWhereLimit()
+        {
+            $lim = 10;
+
+            //insert $lim + 1 elements
+            $acc = [];
+            for( $i=0 ; $i < $lim + 1; $i++ ) {
+                $acc[] = $this->testSaveAndRetrieveBack();
+            }
+
+            $this
+            ->given($result = Dummy::findWhere(['data1', 'data2'], [$acc[0]->getData1(), $acc[0]->getData2()], $lim))
+            ->then
+                ->integer(sizeof($result))
+                    ->isEqualTo($lim)
+                ->array($result)
+                    ->containsValues(array_slice($acc, 0, $lim));
+        }
+
+        public function testFindWhereProjection()
+        {
+            $instance = $this->testSaveAndRetrieveBack();
+            $this
+            ->given($result = Dummy::findWhere(['id'], [$instance->getId()], null, ['id', 'data2']))
+            ->then
+                ->integer(sizeof($result))
+                    ->isEqualTo(1)
+                ->given($elem = $result[0])
+                ->then
+                    ->variable($elem->getId())
+                        ->isEqualTo($instance->getId())
+                    ->variable($elem->getData2())
+                        ->isEqualTo($instance->getData2())
+                    ->boolean($elem->isUndef($elem->getData1()))
+                        ->isTrue();
+        }
+
+        public function testFindOneWhere()
+        {
+            $instance = $this->testSaveAndRetrieveBack();
+
+            $this
+            ->given($result = Dummy::findOneWhere(['id'], [$instance->getId()]))
+            ->then
+                ->object($result)
+                    ->isEqualTo($instance);
+        }
+
+        public function testFindOneWhereNoResult()
+        {
+            $this
+            ->given($result = Dummy::findOneWhere('id < ?', [0]))
+            ->then
+                ->variable($result)
+                    ->isNull();
         }
     }
 

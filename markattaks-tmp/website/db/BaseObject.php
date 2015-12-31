@@ -82,12 +82,12 @@ abstract class BaseObject
                     return self::findWhere($keys, $input_parameters, $limit, $projection);
                 } else {
                     foreach ($where as $e) {
-                        $tmp .= ',';
+                        $tmp .= ' AND ';
                         $tmp .= $e . ' = ?';
                     }
                 }
 
-                $where = ltrim($tmp, ',');
+                $where = ltrim($tmp, ' AND ');
             }
             $query .= $where;
         }
