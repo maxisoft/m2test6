@@ -11,7 +11,7 @@ namespace website\db\tests\units {
   data1 VARCHAR(45) NOT NULL,
   data2 VARCHAR(255),
   PRIMARY KEY (id))
-ENGINE = MEMORY;';
+ENGINE = InnoDB;';
     const DELETE_ALL_TABLE_CONTENT = 'DELETE FROM `DUMMY`';
 
     class BaseObject extends atoum
