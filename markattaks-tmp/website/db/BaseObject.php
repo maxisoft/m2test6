@@ -14,11 +14,17 @@ abstract class BaseObject
     {
         $properties = get_class_vars(get_class($this));
         foreach ($properties as $name => $value) {
-            $firstChar = substr($name, 0, 1);
-            if (is_null($value) && ctype_lower($firstChar) && $firstChar != '_') {
+
+            if (is_null($value) && self::isSqlPropertyMapping($name)) {
                 $this->$name = self::undef();
             }
         }
+    }
+
+    public static function isSqlPropertyMapping($name)
+    {
+        $firstChar = substr($name, 0, 1);
+        return ctype_lower($firstChar) && $firstChar != '_';
     }
 
     public function __set($key, $val)
@@ -176,6 +182,10 @@ abstract class BaseObject
             throw new \RuntimeException("there's no changes on object. Can't save current object");
         }
 
+        if (!$this->validate()) {
+            throw new \RuntimeException("invalid object.");
+        }
+
         $query = $this->isUpdateMode() ? $this->updateQuery() : $this->insertQuery();
         $st = $this->db()->prepare($query);
         $input_parameters = &$this->_modificationMap;
@@ -198,6 +208,8 @@ abstract class BaseObject
         }
         return $ret;
     }
+
+    public abstract function validate();
 
     public function setUpdateMode()
     {
