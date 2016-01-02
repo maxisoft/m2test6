@@ -91,7 +91,7 @@ namespace website\model\tests\units {
         {
             $this
             ->given($this->newTestedInstance())
-                ->if($this->testedInstance->role = 'BAD_ROLE')
+                ->if($this->testedInstance->role = 9)
                 ->if($this->testedInstance->id = 3)
                 ->if($this->testedInstance->login = 'toto')
                 ->if($this->testedInstance->password = 'foo')
