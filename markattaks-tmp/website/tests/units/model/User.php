@@ -74,7 +74,7 @@ namespace website\model\tests\units {
             $this
             ->given($this->newTestedInstance())
                 ->if($this->testedInstance->id = 500000)
-                ->if($this->testedInstance->login = 'toto')
+                ->if($this->testedInstance->login = uniqid("user_"))
                 ->if($this->testedInstance->password = 'foo')
                 ->if($this->testedInstance->role = 'admin')
                 ->if($this->testedInstance->first_name = 'admin')
@@ -105,6 +105,38 @@ namespace website\model\tests\units {
                     ->isInstanceOf('PDOException')
                     ->message
                         ->contains("Data truncated");
+        }
+
+        public function testLoginUniqueness()
+        {
+            $login = uniqid("user_");
+            $this
+            ->given($this->newTestedInstance())
+                ->if($this->testedInstance->login = $login)
+                ->if($this->testedInstance->password = 'foo')
+                ->if($this->testedInstance->role = 'admin')
+                ->if($this->testedInstance->first_name = 'admin')
+                ->if($this->testedInstance->last_name = 'admin')
+                ->if($this->testedInstance->date_of_birth = '2000-01-01')
+            ->then
+                ->boolean($this->testedInstance->save())
+                    ->isTrue()
+                ->given($this->newTestedInstance())
+                    ->if($this->testedInstance->login = $login)
+                    ->if($this->testedInstance->password = 'foo')
+                    ->if($this->testedInstance->role = 'admin')
+                    ->if($this->testedInstance->first_name = 'admin')
+                    ->if($this->testedInstance->last_name = 'admin')
+                    ->if($this->testedInstance->date_of_birth = '2000-01-01')
+                ->then
+                    ->exception(function(){
+                        $this->testedInstance->save();
+                    })
+                        ->isInstanceOf('PDOException')
+                        ->message
+                            ->contains("Integrity constraint violation")
+                            ->contains("Duplicate entry")
+                            ->contains($login);
         }
     }
 
