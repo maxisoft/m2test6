@@ -32,6 +32,9 @@ abstract class BaseObject
         if (!isset($this->$key)) {
             throw new \RuntimeException("$key doesn't exists");
         }
+        if (!self::isSqlPropertyMapping($key)) {
+            throw new \RuntimeException("$key isn't a valid property");
+        }
         if ($this->isUpdateMode() && isset($this->primaryKeysMapping()[$key])) {
             throw new \RuntimeException("do not modify primary key");
         }
