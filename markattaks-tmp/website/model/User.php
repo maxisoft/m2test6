@@ -8,6 +8,8 @@ use website\db\IdBasedObject;
 
 class User extends IdBasedObject
 {
+    private static $ROLES = ['admin' => 1, 'teacher' => 2, 'student' => 3];
+
     protected $login;
     protected $password;
     protected $role;
@@ -66,7 +68,9 @@ class User extends IdBasedObject
 
     public function validate()
     {
-        // TODO: Implement validate() method.
+        if (!$this->isUndef($this->getRole()) && !isset(self::$ROLES[$this->getRole()])) {
+            throw new \RuntimeException("bad role");
+        }
         return true;
     }
 }
