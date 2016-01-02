@@ -1,10 +1,11 @@
 <?php
 
 namespace website\db\tests\units {
-
+    require_once __DIR__ .'/../../tool/DB.php';
     use atoum;
     use website\db\__Undef;
     use website\db\DBTrait;
+    use website\tests\tool\DB;
     const DROP_TABLE = 'DROP TABLE IF EXISTS DUMMY';
     const CREATE_TABLE_SQL = 'CREATE TABLE IF NOT EXISTS DUMMY (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -13,6 +14,7 @@ namespace website\db\tests\units {
   PRIMARY KEY (id))
 ENGINE = MEMORY;';
     const DELETE_ALL_TABLE_CONTENT = 'DELETE FROM DUMMY';
+
     /**
      * @engine inline
      */
@@ -22,7 +24,7 @@ ENGINE = MEMORY;';
 
         public function setUp()
         {
-            putenv("MYSQL_DB_NAME=m2test6-utest");
+            DB::init();
             $this->resetDB();
         }
 
@@ -54,6 +56,7 @@ ENGINE = MEMORY;';
         public function tearDown()
         {
             $this->db()->exec(DROP_TABLE);
+            DB::end();
         }
 
         public function testConstruct()
@@ -142,6 +145,21 @@ ENGINE = MEMORY;';
                     $testedInstance->save();
                 })
                 ->message->contains('no changes on object');
+        }
+
+        public function testSaveInvalidObject()
+        {
+            $this
+            ->given($testedInstance = new Dummy())
+                ->if ($testedInstance->data1 = str_repeat('1', 255))
+            ->then
+                ->boolean($testedInstance->validate())
+                    ->isFalse()
+                ->exception(function() use($testedInstance){
+                    $testedInstance->save();
+                })
+                    ->message
+                        ->contains("invalid");
         }
 
         public function testSaveAndRetrieveBack()
@@ -362,7 +380,7 @@ ENGINE = MEMORY;';
                     ->contains($instance);
         }
 
-        public function testFindWhereAlternativeSyntax3()
+        public function testFindWhereAlternativeSyntax2()
         {
             $instance = $this->testSaveAndRetrieveBack();
             $this
@@ -374,7 +392,7 @@ ENGINE = MEMORY;';
                     ->contains($instance);
         }
 
-        public function testFindWhereAlternativeSyntax4()
+        public function testFindWhereAlternativeSyntax3()
         {
             $instance = $this->testSaveAndRetrieveBack();
             $this
@@ -451,7 +469,7 @@ ENGINE = MEMORY;';
                 ->variable($instance->data1 = 'test');
         }
 
-        public function testMagicMethodSetFail()
+        public function testMagicMethodSetBadProperty()
         {
             $this
             ->given($instance = new Dummy())
@@ -460,6 +478,42 @@ ENGINE = MEMORY;';
                     $instance->attrThatDoesntExists = 'must fail';
                 })
                     ->message->contains("doesn't exists");
+        }
+
+        public function testIsSqlPropertyMapping()
+        {
+            $this
+            ->given($res = \website\db\BaseObject::isSqlPropertyMapping('toto'))
+                ->then
+                    ->boolean($res)
+                        ->isTrue();
+
+            $this
+            ->given($res = \website\db\BaseObject::isSqlPropertyMapping('_toto'))
+            ->then
+                ->boolean($res)
+                    ->isFalse();
+
+            $this
+            ->given($res = \website\db\BaseObject::isSqlPropertyMapping('Toto'))
+            ->then
+                ->boolean($res)
+                    ->isFalse();
+
+            //snake case support
+            $this
+            ->given($res = \website\db\BaseObject::isSqlPropertyMapping('toto_et_tata'))
+                ->then
+                    ->boolean($res)
+                        ->isTrue();
+
+
+            //camel case support
+            $this
+            ->given($res = \website\db\BaseObject::isSqlPropertyMapping('totoEtTata'))
+            ->then
+                ->boolean($res)
+                    ->isTrue();
         }
     }
 
@@ -498,6 +552,11 @@ ENGINE = MEMORY;';
         protected function primaryKeysMapping()
         {
             return ["id" => $this->getId()];
+        }
+
+        public function validate()
+        {
+            return strlen($this->getData1()) < 255;
         }
     }
 

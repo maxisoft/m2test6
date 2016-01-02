@@ -10,10 +10,10 @@ class User extends IdBasedObject
 {
     protected $login;
     protected $password;
-    protected $age;
     protected $role;
     protected $first_name;
     protected $last_name;
+    protected $date_of_birth;
 
 
     /**
@@ -35,9 +35,9 @@ class User extends IdBasedObject
     /**
      * @return mixed
      */
-    public function getAge()
+    public function getDateOfBird()
     {
-        return $this->age;
+        return $this->date_of_birth;
     }
 
     /**
@@ -62,5 +62,11 @@ class User extends IdBasedObject
     public function getLastName()
     {
         return $this->last_name;
+    }
+
+    public function validate()
+    {
+        // TODO: Implement validate() method.
+        return true;
     }
 }
