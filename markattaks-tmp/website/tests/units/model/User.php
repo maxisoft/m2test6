@@ -73,7 +73,7 @@ namespace website\model\tests\units {
         {
             $this
             ->given($this->newTestedInstance())
-                ->if($this->testedInstance->id = 3)
+                ->if($this->testedInstance->id = 500000)
                 ->if($this->testedInstance->login = 'toto')
                 ->if($this->testedInstance->password = 'foo')
                 ->if($this->testedInstance->role = 'admin')
