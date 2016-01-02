@@ -4,11 +4,10 @@ namespace website\model;
 
 
 require_once 'autoload.php';
-use website\db\BaseObject;
+use website\db\IdBasedObject;
 
-class User extends BaseObject
+class User extends IdBasedObject
 {
-    protected $id;
     protected $login;
     protected $password;
     protected $age;
@@ -16,13 +15,6 @@ class User extends BaseObject
     protected $first_name;
     protected $last_name;
 
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * @return mixed
@@ -70,16 +62,5 @@ class User extends BaseObject
     public function getLastName()
     {
         return $this->last_name;
-    }
-
-    public function onInsert()
-    {
-        $this->id = $this->db()->lastInsertId();
-    }
-
-
-    protected function primaryKeysMapping()
-    {
-        return ['id' => $this->getId()];
     }
 }
