@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: duboi
- * Date: 31/12/2015
- * Time: 13:58
- */
 
 namespace website\model;
 

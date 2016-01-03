@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: duboi
- * Date: 31/12/2015
- * Time: 17:04
- */
 
 namespace website\model;
 use website\db\IdBasedObject;
