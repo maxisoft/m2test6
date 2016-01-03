@@ -74,14 +74,14 @@ namespace website\model\tests\units {
             $this
             ->given($this->newTestedInstance())
                 ->if($this->testedInstance->id = 500000)
-                ->if($this->testedInstance->login = uniqid("user_"))
+                ->if($this->testedInstance->login = uniqid("user_", true))
                 ->if($this->testedInstance->password = 'foo')
                 ->if($this->testedInstance->role = 'admin')
                 ->if($this->testedInstance->first_name = 'admin')
                 ->if($this->testedInstance->last_name = 'admin')
                 ->if($this->testedInstance->date_of_birth = '2000-01-01')
             ->then
-                ->boolean($this->allSqlPropertiesNotUndef($this->testedInstance))  //assert all properties filled
+                ->boolean($this->allSqlPropertiesNotUndef($this->testedInstance))  //assert that all properties filled
                     ->isTrue()
                 ->boolean($this->testedInstance->save())
                     ->isTrue();
@@ -108,7 +108,7 @@ namespace website\model\tests\units {
 
         public function testLoginUniqueness()
         {
-            $login = uniqid("user_");
+            $login = uniqid("user_", true);
             $this
             ->given($this->newTestedInstance())
                 ->if($this->testedInstance->login = $login)
@@ -136,6 +136,27 @@ namespace website\model\tests\units {
                             ->contains("Integrity constraint violation")
                             ->contains("Duplicate entry")
                             ->contains($login);
+        }
+
+        public function testIsValidRole()
+        {
+            $validRoles = ['admin', 'teacher', 'student'];
+            foreach($validRoles as $role) {
+                $this
+                ->given($role)
+                ->then
+                    ->boolean(\website\model\User::isValidRole($role))
+                        ->isTrue();
+            }
+        }
+
+        public function testIsValidRoleFail()
+        {
+            $this
+            ->given($role = 'BAD_ROLE')
+            ->then
+                ->boolean(\website\model\User::isValidRole($role))
+                    ->isFalse();
         }
     }
 

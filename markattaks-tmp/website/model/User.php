@@ -66,9 +66,14 @@ class User extends IdBasedObject
         return $this->last_name;
     }
 
+    public static function isValidRole($role)
+    {
+        return isset(self::$ROLES[$role]);
+    }
+
     public function validate()
     {
-        if (!$this->isUndef($this->getRole()) && !isset(self::$ROLES[$this->getRole()])) {
+        if (!self::isUndef($this->getRole()) && !self::isValidRole($this->getRole())) {
             throw new \RuntimeException("bad role");
         }
         return true;
