@@ -1,5 +1,5 @@
 <?php
-require_once 'Common.php';
+require_once '../Common.php';
 
 $common = \website\Common::getInstance();
 

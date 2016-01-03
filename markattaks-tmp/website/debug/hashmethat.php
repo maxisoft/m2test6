@@ -1,5 +1,5 @@
 <?php
-require_once 'Common.php';
+require_once '../Common.php';
 
 $data = null;
 if (isset($argc) && $argc > 1) {
