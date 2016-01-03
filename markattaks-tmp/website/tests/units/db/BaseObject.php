@@ -466,7 +466,8 @@ ENGINE = MEMORY;';
             $this
             ->given($instance = new Dummy())
             ->then
-                ->variable($instance->data1 = 'test');
+                ->variable($instance->data1 = 'test')
+                    ->isEqualTo('test');
         }
 
         public function testMagicMethodSetBadProperty()
