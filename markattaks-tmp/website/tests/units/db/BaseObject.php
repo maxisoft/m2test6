@@ -285,7 +285,7 @@ ENGINE = MEMORY;';
                     ->isFalse();
 
             $this
-            ->given($undef = new __Undef()) //any another Undef instance doesn't work
+            ->given($undef = new __Undef()) //any other Undef instance doesn't work
             ->then
             ->boolean(\website\db\BaseObject::isUndef($undef))
                 ->isFalse();

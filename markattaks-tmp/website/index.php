@@ -1,5 +1,5 @@
 <?php
-    include_once 'Common.php';
+    require_once 'autoload.php';
     $session = new \website\utils\Session();
 ?>
 <!DOCTYPE html>
