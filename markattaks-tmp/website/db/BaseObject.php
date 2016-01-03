@@ -14,7 +14,6 @@ abstract class BaseObject
     {
         $properties = get_class_vars(get_class($this));
         foreach ($properties as $name => $value) {
-
             if (is_null($value) && self::isSqlPropertyMapping($name)) {
                 $this->$name = self::undef();
             }
@@ -240,6 +239,18 @@ abstract class BaseObject
     protected function resetModification()
     {
         $this->_modificationMap = array();
+    }
+
+    public function toArray()
+    {
+        $properties = &get_class_vars(get_class($this));
+        $ret = array();
+        foreach ($properties as $name => &$value) {
+            if ((self::isSqlPropertyMapping($name) && !self::isUndef($this->$name))) {
+                $ret[$name] = $this->$name;
+            }
+        }
+        return $ret;
     }
 }
 

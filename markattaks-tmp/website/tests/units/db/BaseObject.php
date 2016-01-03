@@ -515,6 +515,16 @@ ENGINE = MEMORY;';
                 ->boolean($res)
                     ->isTrue();
         }
+
+        public function testToArray()
+        {
+            $this
+            ->given($instance = new Dummy())
+                ->if($instance->data1 = "test")
+            ->then
+                ->array($instance->toArray())
+                    ->isEqualTo(['data1' => $instance->getData1()]);
+        }
     }
 
 
