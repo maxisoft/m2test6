@@ -1,34 +1,37 @@
 <?php
+require_once "autoload.php";
 
-include_once "Database.php";
+function register() {
+    $user = new \website\model\User();
+    $user->login = $_POST['login'];
+    $user->password = \website\utils\Password::hash($_POST['password']);
+    $user->role = $_POST['role'];
+    $user->first_name = $_POST['first_name'];
+    $user->last_name = $_POST['last_name'];
+    isset($_POST['date_of_birth']) and ($user->date_of_birth = $_POST['date_of_birth']); //optional field
 
-class Register {
-
-	public $db;
-	public $login;
-	public $password;
-	public $age;
-	public $role;
-	public $first_name;
-	public $last_name;
-	public $date_of_birth;
-	
-	public function __construct(){
-		$this->db= new Database();
-		$this->login = $_POST['login'];
-		$this->password = $_POST['password'];
-		$this->role = $_POST['role'];
-		$this->first_name = $_POST['first_name'];
-		$this->last_name = $_POST['last_name'];
-		$this->date_of_birth = $_POST['date_of_birth'];
-		$this->Add_User();
-	}
-	public function Add_User(){
-		$this->db = new Database();
-		$this->db->query("INSERT INTO `user` (`login`,`password`,`role`,`first_name`,`last_name`,`date_of_birth`) 
-				         VALUES('$this->login','$this->password','$this->role','$this->first_name','$this->last_name',
-						 '$this->date_of_birth')");
-		$this->db->execute();
-	}
+    return $user->save();
 }
-$register = new Register();
+
+if (isset($_POST['login'])){ //TODO Faire isset pour tout les autres champs requis
+    try {
+       register();
+       echo "ok"; //TODO remove
+   }
+   catch(\website\utils\PasswordException $e) {
+        // TODO gestions d'erreurs PASSWORD
+        echo 'Bad password: ',  $e->getMessage(), "\n";
+   }
+   catch (PDOException $e) {
+        // TODO gestions d'erreurs DB
+        echo 'Caught database exception: ',  $e->getMessage(), "\n";
+   }
+   catch(exception $e){
+        echo 'Caught unexpected exception: ',  $e->getMessage(), "\n";
+   }
+
+} else{
+    // TODO gestions des messages d'erreurs (ie isset is false)
+}
+
+
