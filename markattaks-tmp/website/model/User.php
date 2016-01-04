@@ -78,4 +78,30 @@ class User extends IdBasedObject
         }
         return true;
     }
+
+    public static function delete($id)
+    {
+        $transactStarted = false;
+        if (!self::db()->inTransaction()) {
+            $transactStarted = true;
+            self::db()->beginTransaction();
+        }
+
+        $queries = array();
+
+        $queries[] = "DELETE FROM " . Notification::tableName() . " WHERE target_user_id = :id";
+        $queries[] = "DELETE FROM " . StudentModuleSubscription::tableName() . " WHERE user_id = :id";
+        $queries[] = "DELETE FROM " . TeacherModuleSubscription::tableName() . " WHERE user_id = :id";
+
+        $queries[] = "DELETE FROM " . self::tableName() . " WHERE id = :id";
+
+        foreach ($queries as &$query) {
+            $st = self::db()->prepare($query);
+            $st->execute(['id' => $id]);
+        }
+
+        if ($transactStarted && self::db()->inTransaction()) {
+            self::db()->commit();
+        }
+    }
 }

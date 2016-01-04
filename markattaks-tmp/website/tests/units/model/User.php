@@ -5,6 +5,7 @@ namespace website\model\tests\units {
     use atoum;
     use website\db\BaseObject;
     use website\db\DBTrait;
+    use website\model\Notification;
     use website\tests\tool\DB;
 
     const DELETE_ALL_TABLE_CONTENT = 'DELETE FROM `USER`';
@@ -158,6 +159,36 @@ namespace website\model\tests\units {
                 ->boolean(\website\model\User::isValidRole($role))
                     ->isFalse();
         }
+
+        public function testDelete()
+        {
+            $this
+            ->given($this->newTestedInstance())
+                ->if($this->testedInstance->login = uniqid("user_", true))
+                ->if($this->testedInstance->password = 'foo')
+                ->if($this->testedInstance->role = 'student')
+                ->if($this->testedInstance->first_name = 'bad')
+                ->if($this->testedInstance->last_name = 'boy')
+            ->then
+                ->boolean($this->testedInstance->save())
+                    ->isTrue()
+                ->given($notif = new Notification())
+                    ->if($notif->message = "hey")
+                    ->if($notif->read = 1)
+                    ->if($notif->creation_date = date('Y-m-d H:i:s'))
+                    ->if($notif->target_user_id = $this->testedInstance->getId())
+                ->then
+                    ->boolean($notif->save())
+                        ->isTrue()
+                    ->given(\website\model\User::delete($this->testedInstance->getId()))
+                    ->then
+                        ->variable(\website\model\User::findOneWhere(['id' => $this->testedInstance->getId()]))
+                            ->isNull()
+                        ->variable(Notification::findOneWhere(['id' => $notif->getId()]))
+                            ->isNull();
+            //TODO test with module subscription
+        }
+
     }
 
 }

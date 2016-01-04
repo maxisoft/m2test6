@@ -1,7 +1,7 @@
 <?php
 require_once 'autoload.php';
 
-
+//TODO Move login into class
 
 $session = new \website\utils\Session();
 
