@@ -138,6 +138,7 @@ abstract class BaseObject
     protected function insertQuery()
     {
         $keys = array_keys($this->_modificationMap);
+        $keys = array_map(function(&$e) {return '`' . $e . '`';}, $keys);
         $query = 'INSERT INTO ' . $this->tableName() . '(' . join(',', $keys) . ') VALUES (';
         $valueEscape = '';
         foreach ($this->_modificationMap as $key => $val) {
@@ -163,7 +164,7 @@ abstract class BaseObject
         $valueEscape = '';
         foreach ($keys as $key) {
             $valueEscape .= ',';
-            $valueEscape .= $key . '= :' . $key;
+            $valueEscape .= '`' . $key . '`' . '= :' . $key;
         }
         $query .= ltrim($valueEscape, ',');
         $query .= ' WHERE ';
