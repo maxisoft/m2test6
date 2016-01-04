@@ -1,18 +1,15 @@
 <?php
 require_once 'autoload.php';
 
-function stripAccents($str)
-{
-    return strtr(utf8_decode($str), utf8_decode('àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ'), 'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
-}
+
 
 $session = new \website\utils\Session();
 
 (isset($_GET['q']) and $session->isLogged()) or die();
 
-$q = stripAccents($_GET['q']);
+$q = \website\db\Escape::escapeSQLLike($_GET['q']);
 
-(strlen($q) >= 2 and ctype_alnum($q)) or die();
+(strlen($q) >= 2) or die();
 
 $q = $q . '%';
 
