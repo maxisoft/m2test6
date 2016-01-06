@@ -52,6 +52,10 @@ namespace website\utils\tests\units {
             $user->password = \website\utils\Password::hash("banana", false);
             $user->first_name = 'toto';
             $user->last_name = 'toto';
+            $user->date_of_birth = '2000-01-01';
+            $user->address = 'nohere';
+            $user->phone = '0000';
+            $user->email = '0000@lol.com';
             return $user;
         }
 

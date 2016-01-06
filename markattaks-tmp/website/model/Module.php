@@ -7,17 +7,10 @@ use website\db\IdBasedObject;
 
 class Module extends IdBasedObject
 {
-    protected $owner_user;
     protected $name;
+    protected $code;
     protected $coefficient;
-
-    /**
-     * @return mixed
-     */
-    public function getOwnerUser()
-    {
-        return $this->owner_user;
-    }
+    protected $description;
 
     /**
      * @return mixed
@@ -35,9 +28,34 @@ class Module extends IdBasedObject
         return $this->coefficient;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function onInsert()
+    {
+        parent::onInsert();
+        $this->description = null;
+    }
+
     public function validate()
     {
-        // TODO: Implement validate() method.
+        $code_len = strlen($this->code);
+        if (!(2 <= $code_len && $code_len <= 6)) {
+            throw new \RuntimeException("bad code length");
+        }
         return true;
     }
 

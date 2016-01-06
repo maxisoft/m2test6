@@ -8,13 +8,17 @@ namespace website\model\tests\units {
     use website\model\Notification;
     use website\tests\tool\DB;
 
-    const DELETE_ALL_TABLE_CONTENT = 'DELETE FROM `USER`';
+
 
     /**
      * @engine inline
      */
     class User extends atoum
     {
+        const DELETE_ALL_TABLE_CONTENT = 'DELETE FROM `USER`';
+        const DEFAULT_PHONE_NUMBER = '000';
+        const DEFAULT_ADDRESS = 'nowhere';
+        const DEFAULT_DATE = '2000-01-01';
         use DBTrait;
 
         public function setUp()
@@ -30,7 +34,7 @@ namespace website\model\tests\units {
 
         private static function cleanDB()
         {
-            self::db()->exec(DELETE_ALL_TABLE_CONTENT);
+            self::db()->exec(self::DELETE_ALL_TABLE_CONTENT);
         }
 
         private static function allSqlPropertiesUndef($instance)
@@ -80,7 +84,10 @@ namespace website\model\tests\units {
                 ->if($this->testedInstance->role = 'admin')
                 ->if($this->testedInstance->first_name = 'admin')
                 ->if($this->testedInstance->last_name = 'admin')
-                ->if($this->testedInstance->date_of_birth = '2000-01-01')
+                ->if($this->testedInstance->date_of_birth = self::DEFAULT_DATE)
+                ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
+                ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
+                ->if($this->testedInstance->email = $this->mailAddress())
             ->then
                 ->boolean($this->allSqlPropertiesNotUndef($this->testedInstance))  //assert that all properties filled
                     ->isTrue()
@@ -98,7 +105,10 @@ namespace website\model\tests\units {
                 ->if($this->testedInstance->password = 'foo')
                 ->if($this->testedInstance->first_name = 'admin')
                 ->if($this->testedInstance->last_name = 'admin')
-                ->if($this->testedInstance->date_of_birth = '2000-01-01')
+                ->if($this->testedInstance->date_of_birth = self::DEFAULT_DATE)
+                ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
+                ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
+                ->if($this->testedInstance->email = $this->mailAddress())
             ->then
                 ->exception(function(){
                         $this->testedInstance->save();
@@ -117,7 +127,10 @@ namespace website\model\tests\units {
                 ->if($this->testedInstance->role = 'admin')
                 ->if($this->testedInstance->first_name = 'admin')
                 ->if($this->testedInstance->last_name = 'admin')
-                ->if($this->testedInstance->date_of_birth = '2000-01-01')
+                ->if($this->testedInstance->date_of_birth = self::DEFAULT_DATE)
+                ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
+                ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
+                ->if($this->testedInstance->email = $this->mailAddress())
             ->then
                 ->boolean($this->testedInstance->save())
                     ->isTrue()
@@ -127,7 +140,10 @@ namespace website\model\tests\units {
                     ->if($this->testedInstance->role = 'admin')
                     ->if($this->testedInstance->first_name = 'admin')
                     ->if($this->testedInstance->last_name = 'admin')
-                    ->if($this->testedInstance->date_of_birth = '2000-01-01')
+                    ->if($this->testedInstance->date_of_birth = self::DEFAULT_DATE)
+                    ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
+                    ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
+                    ->if($this->testedInstance->email = $this->mailAddress())
                 ->then
                     ->exception(function(){
                         $this->testedInstance->save();
@@ -169,6 +185,10 @@ namespace website\model\tests\units {
                 ->if($this->testedInstance->role = 'student')
                 ->if($this->testedInstance->first_name = 'bad')
                 ->if($this->testedInstance->last_name = 'boy')
+                ->if($this->testedInstance->date_of_birth = self::DEFAULT_DATE)
+                ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
+                ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
+                ->if($this->testedInstance->email = $this->mailAddress())
             ->then
                 ->boolean($this->testedInstance->save())
                     ->isTrue()
@@ -189,6 +209,56 @@ namespace website\model\tests\units {
             //TODO test with module subscription
         }
 
+        public function testMailAddress()
+        {
+            $email = 'test@mail.com';
+            $this
+            ->given($this->newTestedInstance())
+                ->if($this->testedInstance->login = uniqid("user_", true))
+                ->if($this->testedInstance->password = 'foo')
+                ->if($this->testedInstance->role = 'student')
+                ->if($this->testedInstance->first_name = 'bad')
+                ->if($this->testedInstance->last_name = 'boy')
+                ->if($this->testedInstance->date_of_birth = self::DEFAULT_DATE)
+                ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
+                ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
+                ->if($this->testedInstance->email = $email)
+            ->then
+                ->boolean($this->testedInstance->save())
+                    ->isTrue();
+        }
+
+        public function testBadMailAddress()
+        {
+
+            $bad_mailaddresses = ['bad address', 'test@', 'test@g', 'test@t.', 'te@t@t'];
+
+            array_map(function($mail){
+                $this
+                ->given($this->newTestedInstance())
+                    ->if($this->testedInstance->login = uniqid("user_", true))
+                    ->if($this->testedInstance->password = 'foo')
+                    ->if($this->testedInstance->role = 'student')
+                    ->if($this->testedInstance->first_name = 'bad')
+                    ->if($this->testedInstance->last_name = 'boy')
+                    ->if($this->testedInstance->date_of_birth = self::DEFAULT_DATE)
+                    ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
+                    ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
+                    ->if($this->testedInstance->email = $mail)
+                ->then
+                ->exception(function(){$this->testedInstance->save();})
+                    ->isInstanceOf('PDOException')
+                    ->message
+                        ->contains('bad email address')
+                ;
+            }, $bad_mailaddresses);
+
+        }
+
+        public function mailAddress()
+        {
+            return uniqid("mail", true) . "@mail.com";
+        }
     }
 
 }

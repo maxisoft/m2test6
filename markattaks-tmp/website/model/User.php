@@ -8,7 +8,7 @@ use website\db\IdBasedObject;
 
 class User extends IdBasedObject
 {
-    private static $ROLES = ['admin' => 1, 'teacher' => 2, 'student' => 3];
+    private static $ROLES = ['admin' => 0, 'teacher' => 1, 'student' => 2];
 
     protected $login;
     protected $password;
@@ -16,6 +16,9 @@ class User extends IdBasedObject
     protected $first_name;
     protected $last_name;
     protected $date_of_birth;
+    protected $address;
+    protected $phone;
+    protected $email;
 
 
     /**
@@ -69,6 +72,30 @@ class User extends IdBasedObject
     public static function isValidRole($role)
     {
         return isset(self::$ROLES[$role]);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
     }
 
     public function validate()

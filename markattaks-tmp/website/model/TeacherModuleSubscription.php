@@ -9,6 +9,7 @@ class TeacherModuleSubscription extends BaseObject
 {
     protected $module_id;
     protected $user_id;
+    protected $main;
 
     /**
      * @return mixed
@@ -24,6 +25,14 @@ class TeacherModuleSubscription extends BaseObject
     public function getUserId()
     {
         return $this->user_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMain()
+    {
+        return $this->main;
     }
 
     public function getUser($projection='*')

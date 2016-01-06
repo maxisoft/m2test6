@@ -62,6 +62,4 @@ class StudentModuleSubscription extends BaseObject
     {
         return 'STUDENT_MODULE_SUBSCRIPTION';
     }
-
-
 }
