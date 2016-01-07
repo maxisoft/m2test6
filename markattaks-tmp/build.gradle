@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 plugins {
     id 'org.hidetake.ssh' version '1.1.4'
 }
@@ -53,8 +55,8 @@ remotes {
 
 def autoRemoteTarget() {
     System.getenv('M2TEST6_SSH_REMOTE') ?:
-      System.getenv('JENKINS_URL') ? 'master' :
-        System.getenv('TUNNEL_MAXIME') ? 'maxime_tunnel' : 'master'
+            System.getenv('JENKINS_URL') ? 'master' :
+                    System.getenv('TUNNEL_MAXIME') ? 'maxime_tunnel' : 'master'
 }
 
 def createUploadToTask(String httpDirTarget) {
@@ -63,13 +65,13 @@ def createUploadToTask(String httpDirTarget) {
         def target = "/home/m2test6/public_html/$httpDirTarget"
         ssh.run {
             session(remotes.role(autoRemoteTarget())) {
-                execute ("mkdir $tmpDir")
+                execute("mkdir $tmpDir")
                 put from: 'website', into: tmpDir
                 execute("rm -r $target/*")
-                execute ("cp -r $tmpDir/website/* $target") { result ->
+                execute("cp -r $tmpDir/website/* $target") { result ->
                     println "$result"
                 }
-                execute ("rm -r $tmpDir")
+                execute("rm -r $tmpDir")
             }
         }
     }
@@ -80,16 +82,44 @@ task copyDeps(type: Copy) {
     into 'build/lib'
 }
 
-['preprod', 'prod', 'test'].each {createUploadToTask(it)}
+['preprod', 'prod', 'test'].each { createUploadToTask(it) }
 
 task testPhp(type: Exec) {
     commandLine 'php', '.bootstrap.atoum.php'
+    ignoreExitValue = true
+}
+
+task easterEgg << {
+    def file = "build/atoum/treemap/data.json" as File
+    if (file.exists()) {
+        def coverage = new JsonSlurper().parse(file).coverage
+        def gifs = ['http://gifs.joelglovier.com/proud/gandalf-smile.gif',
+                'http://gifs.joelglovier.com/proud/riker-smile.gif',
+                'http://gifs.joelglovier.com/proud/head-nod.gif']
+        if (coverage > 70) {
+            file = "build/atoum/cover/index.html" as File
+            if (file.exists()){
+                file.renameTo("build/atoum/cover/index.html.old")
+
+                new File("build/atoum/cover/index.html").withWriter { w ->
+                    new File("build/atoum/cover/index.html.old").eachLine { line ->
+                        w << line.replaceAll(
+                                '<p>Code coverage report powered by <a href="http://atoum.org">atoum</a></p>',
+                                "<img src='${gifs[new Random().nextInt(gifs.size())]}'/>")
+                        w << System.lineSeparator()
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 task testPhpDeployThenSelenium(type: Test, dependsOn: [testPhp, test]) {
 }
 
 test.shouldRunAfter testPhp
+easterEgg.shouldRunAfter testPhp
 
 task writeNewPom << {
     pom.writeTo("$buildDir/newpom.xml")
