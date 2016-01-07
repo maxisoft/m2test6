@@ -75,6 +75,11 @@ def createUploadToTask(String httpDirTarget) {
     }
 }
 
+task copyDeps(type: Copy) {
+    from configurations.testCompile
+    into 'build/lib'
+}
+
 ['preprod', 'prod', 'test'].each {createUploadToTask(it)}
 
 task testPhp(type: Exec) {
