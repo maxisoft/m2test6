@@ -17,6 +17,7 @@ namespace website\model\tests\units {
     {
         use DBTrait;
         const DELETE_ALL_TABLE_CONTENT = 'DELETE FROM `MODULE`';
+        private static $code = 0;
 
         public function setUp()
         {
@@ -73,8 +74,26 @@ namespace website\model\tests\units {
 
         public function testMapping()
         {
-            //TODO
+            $this
+                ->given($this->newTestedInstance())
+                    ->if($this->testedInstance->id = 500000)
+                    ->if($this->testedInstance->name = uniqid("name", true))
+                    ->if($this->testedInstance->code = self::code())
+                    ->if($this->testedInstance->coefficient = 2)
+                    ->if($this->testedInstance->description = '')
+                ->then
+                    ->boolean($this->allSqlPropertiesNotUndef($this->testedInstance))  //assert that all properties filled
+                        ->isTrue()
+                    ->boolean($this->testedInstance->save())
+                        ->isTrue();
+        }
+
+        public static function code()
+        {
+            return sprintf("%'.04d\n", self::$code++);
         }
     }
+
+
 
 }

@@ -211,7 +211,7 @@ namespace website\model\tests\units {
 
         public function testMailAddress()
         {
-            $email = 'test@mail.com';
+            $email = $this->mailAddress();
             $this
             ->given($this->newTestedInstance())
                 ->if($this->testedInstance->login = uniqid("user_", true))
@@ -226,6 +226,45 @@ namespace website\model\tests\units {
             ->then
                 ->boolean($this->testedInstance->save())
                     ->isTrue();
+        }
+
+        public function testMailAddressUniqueness()
+        {
+            $email = $this->mailAddress();
+            $this
+                ->given($this->newTestedInstance())
+                    ->if($this->testedInstance->login = uniqid("user_", true))
+                    ->if($this->testedInstance->password = 'foo')
+                    ->if($this->testedInstance->role = 'student')
+                    ->if($this->testedInstance->first_name = 'bad')
+                    ->if($this->testedInstance->last_name = 'boy')
+                    ->if($this->testedInstance->date_of_birth = self::DEFAULT_DATE)
+                    ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
+                    ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
+                    ->if($this->testedInstance->email = $email)
+                ->then
+                    ->boolean($this->testedInstance->save())
+                        ->isTrue()
+                ->given($this->newTestedInstance())
+                    ->if($this->testedInstance->login = uniqid("user_", true))
+                    ->if($this->testedInstance->password = 'foo')
+                    ->if($this->testedInstance->role = 'student')
+                    ->if($this->testedInstance->first_name = 'bad')
+                    ->if($this->testedInstance->last_name = 'boy')
+                    ->if($this->testedInstance->date_of_birth = self::DEFAULT_DATE)
+                    ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
+                    ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
+                    ->if($this->testedInstance->email = $email)
+                ->then
+                    ->exception(function(){
+                        $this->testedInstance->save();
+                    })
+                        ->isInstanceOf('PDOException')
+                        ->message
+                            ->contains("Integrity constraint violation")
+                            ->contains("Duplicate entry")
+                            ->contains($email)
+                            ->contains("email_UNIQUE");
         }
 
         public function testInsertBadMailAddress()
@@ -285,7 +324,6 @@ namespace website\model\tests\units {
                                     ->contains('bad email address')
                 ;
             }, $bad_mailaddresses);
-
         }
 
         public function mailAddress()
