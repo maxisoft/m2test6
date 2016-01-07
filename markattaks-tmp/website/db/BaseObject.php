@@ -72,7 +72,7 @@ abstract class BaseObject
         if (is_array($projection)) {
             $projection = join(',', $projection);
         }
-        $query = 'SELECT ' . $projection . ' FROM ' . self::tableName();
+        $query = 'SELECT ' . $projection . ' FROM ' . forward_static_call([get_called_class(), 'tableName']);
         if (!is_null($where)) {
             $query .= ' WHERE ';
             $tmp = '';
