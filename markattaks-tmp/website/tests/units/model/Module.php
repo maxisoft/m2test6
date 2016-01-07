@@ -68,7 +68,8 @@ namespace website\model\tests\units {
             ->given($this->newTestedInstance())
             ->then
                 ->boolean($this->allSqlPropertiesUndef($this->testedInstance))
-                    ->isTrue();
+                    ->isTrue()
+            ;
         }
 
 
@@ -77,7 +78,7 @@ namespace website\model\tests\units {
             $this
                 ->given($this->newTestedInstance())
                     ->if($this->testedInstance->id = 500000)
-                    ->if($this->testedInstance->name = uniqid("name", true))
+                    ->if($this->testedInstance->name = self::name())
                     ->if($this->testedInstance->code = self::code())
                     ->if($this->testedInstance->coefficient = 2)
                     ->if($this->testedInstance->description = '')
@@ -85,12 +86,101 @@ namespace website\model\tests\units {
                     ->boolean($this->allSqlPropertiesNotUndef($this->testedInstance))  //assert that all properties filled
                         ->isTrue()
                     ->boolean($this->testedInstance->save())
+                        ->isTrue()
+            ;
+        }
+
+        public function testDefaultValue()
+        {
+            $this
+            ->given($this->newTestedInstance())
+                ->if($this->testedInstance->name = self::name())
+                ->if($this->testedInstance->code = self::code())
+                ->if($this->testedInstance->coefficient = 2)
+            ->then
+                ->boolean($this->testedInstance->save())
+                    ->isTrue()
+                ->given($dbTestedInstCopy = \website\model\Module::findOneWhere(['id' => $this->testedInstance->getId()]))
+                ->then
+                    ->object($dbTestedInstCopy)
+                        ->isEqualTo($this->testedInstance)
+                    ->variable($this->testedInstance->getDescription())
+                        ->isNull()
+
+            ;
+        }
+
+        public function testCodeUniqueness()
+        {
+
+            $code = self::code();
+            $this
+            ->given($this->newTestedInstance())
+                ->if($this->testedInstance->name = self::name())
+                ->if($this->testedInstance->code = $code)
+                ->if($this->testedInstance->coefficient = 2)
+                ->if($this->testedInstance->description = '')
+            ->then
+                ->boolean($this->testedInstance->save())
+                    ->isTrue()
+                ->given($this->newTestedInstance())
+                    ->if($this->testedInstance->name = self::name())
+                    ->if($this->testedInstance->code = $code)
+                    ->if($this->testedInstance->coefficient = 2)
+                    ->if($this->testedInstance->description = '')
+                ->then
+                    ->exception(function(){$this->testedInstance->save();})
+                        ->isInstanceOf('PDOException')
+                        ->message
+                            ->contains('Integrity constraint violation')
+                            ->contains('Duplicate entry')
+                            ->contains('code_UNIQUE')
+            ;
+        }
+        public function testCodeLengthOk()
+        {
+            $testedLengths = range(2, 6);
+            foreach ($testedLengths as $len) {
+                $this
+                ->given($this->newTestedInstance())
+                    ->if($this->testedInstance->name = self::name())
+                    ->if($this->testedInstance->code = str_repeat('9', $len))
+                    ->if($this->testedInstance->coefficient = 2)
+                    ->if($this->testedInstance->description = '')
+                ->then
+                    ->boolean($this->testedInstance->save())
                         ->isTrue();
+            }
+        }
+
+        public function testBadCodeLength()
+        {
+
+            $testedLengths = [0, 1, 7];
+            foreach ($testedLengths as $len) {
+                $this
+                ->given($this->newTestedInstance())
+                    ->if($this->testedInstance->name = self::name())
+                    ->if($this->testedInstance->code = str_repeat('9', $len))
+                    ->if($this->testedInstance->coefficient = 2)
+                    ->if($this->testedInstance->description = '')
+                ->then
+                    ->exception(function(){$this->testedInstance->save();})
+                        ->isInstanceOf('RuntimeException')
+                        ->message
+                            ->contains('bad code length');
+            }
+
+        }
+
+        public static function name()
+        {
+            return uniqid("name", true);
         }
 
         public static function code()
         {
-            return sprintf("%'.04d\n", self::$code++);
+            return sprintf("%'.05d\n", self::$code++);
         }
     }
 

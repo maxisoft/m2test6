@@ -19,6 +19,12 @@ namespace website\model\tests\units {
         const DEFAULT_PHONE_NUMBER = '000';
         const DEFAULT_ADDRESS = 'nowhere';
         const DEFAULT_DATE = '2000-01-01';
+        const DEFAULT_PASSWORD = 'foo';
+        const STUDENT_ROLE = 'student';
+        const DEFAULT_FIRST_NAME = 'bad';
+        const DEFAULT_LAST_NAME = 'boy';
+        const TEACHER_ROLE = 'teacher';
+        const ADMIN_ROLE = 'admin';
         use DBTrait;
 
         public function setUp()
@@ -79,11 +85,11 @@ namespace website\model\tests\units {
             $this
             ->given($this->newTestedInstance())
                 ->if($this->testedInstance->id = 500000)
-                ->if($this->testedInstance->login = uniqid("user_", true))
-                ->if($this->testedInstance->password = 'foo')
-                ->if($this->testedInstance->role = 'admin')
-                ->if($this->testedInstance->first_name = 'admin')
-                ->if($this->testedInstance->last_name = 'admin')
+                ->if($this->testedInstance->login = self::login())
+                ->if($this->testedInstance->password = self::DEFAULT_PASSWORD)
+                ->if($this->testedInstance->role = self::ADMIN_ROLE)
+                ->if($this->testedInstance->first_name = self::DEFAULT_FIRST_NAME)
+                ->if($this->testedInstance->last_name = self::DEFAULT_LAST_NAME)
                 ->if($this->testedInstance->date_of_birth = self::DEFAULT_DATE)
                 ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
                 ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
@@ -100,11 +106,10 @@ namespace website\model\tests\units {
             $this
             ->given($this->newTestedInstance())
                 ->if($this->testedInstance->role = 'BAD_ROLE')
-                ->if($this->testedInstance->id = 3)
-                ->if($this->testedInstance->login = 'toto')
-                ->if($this->testedInstance->password = 'foo')
-                ->if($this->testedInstance->first_name = 'admin')
-                ->if($this->testedInstance->last_name = 'admin')
+                ->if($this->testedInstance->login = self::login())
+                ->if($this->testedInstance->password = self::DEFAULT_PASSWORD)
+                ->if($this->testedInstance->first_name = self::DEFAULT_FIRST_NAME)
+                ->if($this->testedInstance->last_name = self::DEFAULT_LAST_NAME)
                 ->if($this->testedInstance->date_of_birth = self::DEFAULT_DATE)
                 ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
                 ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
@@ -119,14 +124,14 @@ namespace website\model\tests\units {
 
         public function testLoginUniqueness()
         {
-            $login = uniqid("user_", true);
+            $login = self::login();
             $this
             ->given($this->newTestedInstance())
                 ->if($this->testedInstance->login = $login)
-                ->if($this->testedInstance->password = 'foo')
-                ->if($this->testedInstance->role = 'admin')
-                ->if($this->testedInstance->first_name = 'admin')
-                ->if($this->testedInstance->last_name = 'admin')
+                ->if($this->testedInstance->password = self::DEFAULT_PASSWORD)
+                ->if($this->testedInstance->role = self::ADMIN_ROLE)
+                ->if($this->testedInstance->first_name = self::DEFAULT_FIRST_NAME)
+                ->if($this->testedInstance->last_name = self::DEFAULT_LAST_NAME)
                 ->if($this->testedInstance->date_of_birth = self::DEFAULT_DATE)
                 ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
                 ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
@@ -136,10 +141,10 @@ namespace website\model\tests\units {
                     ->isTrue()
                 ->given($this->newTestedInstance())
                     ->if($this->testedInstance->login = $login)
-                    ->if($this->testedInstance->password = 'foo')
-                    ->if($this->testedInstance->role = 'admin')
-                    ->if($this->testedInstance->first_name = 'admin')
-                    ->if($this->testedInstance->last_name = 'admin')
+                    ->if($this->testedInstance->password = self::DEFAULT_PASSWORD)
+                    ->if($this->testedInstance->role = self::ADMIN_ROLE)
+                    ->if($this->testedInstance->first_name = self::DEFAULT_FIRST_NAME)
+                    ->if($this->testedInstance->last_name = self::DEFAULT_LAST_NAME)
                     ->if($this->testedInstance->date_of_birth = self::DEFAULT_DATE)
                     ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
                     ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
@@ -157,7 +162,7 @@ namespace website\model\tests\units {
 
         public function testIsValidRole()
         {
-            $validRoles = ['admin', 'teacher', 'student'];
+            $validRoles = [self::ADMIN_ROLE, self::TEACHER_ROLE, self::STUDENT_ROLE];
             foreach($validRoles as $role) {
                 $this
                 ->given($role)
@@ -180,11 +185,11 @@ namespace website\model\tests\units {
         {
             $this
             ->given($this->newTestedInstance())
-                ->if($this->testedInstance->login = uniqid("user_", true))
-                ->if($this->testedInstance->password = 'foo')
-                ->if($this->testedInstance->role = 'student')
-                ->if($this->testedInstance->first_name = 'bad')
-                ->if($this->testedInstance->last_name = 'boy')
+                ->if($this->testedInstance->login = self::login())
+                ->if($this->testedInstance->password = self::DEFAULT_PASSWORD)
+                ->if($this->testedInstance->role = self::STUDENT_ROLE)
+                ->if($this->testedInstance->first_name = self::DEFAULT_FIRST_NAME)
+                ->if($this->testedInstance->last_name = self::DEFAULT_LAST_NAME)
                 ->if($this->testedInstance->date_of_birth = self::DEFAULT_DATE)
                 ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
                 ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
@@ -214,11 +219,11 @@ namespace website\model\tests\units {
             $email = $this->mailAddress();
             $this
             ->given($this->newTestedInstance())
-                ->if($this->testedInstance->login = uniqid("user_", true))
-                ->if($this->testedInstance->password = 'foo')
-                ->if($this->testedInstance->role = 'student')
-                ->if($this->testedInstance->first_name = 'bad')
-                ->if($this->testedInstance->last_name = 'boy')
+                ->if($this->testedInstance->login = self::login())
+                ->if($this->testedInstance->password = self::DEFAULT_PASSWORD)
+                ->if($this->testedInstance->role = self::STUDENT_ROLE)
+                ->if($this->testedInstance->first_name = self::DEFAULT_FIRST_NAME)
+                ->if($this->testedInstance->last_name = self::DEFAULT_LAST_NAME)
                 ->if($this->testedInstance->date_of_birth = self::DEFAULT_DATE)
                 ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
                 ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
@@ -233,11 +238,11 @@ namespace website\model\tests\units {
             $email = $this->mailAddress();
             $this
                 ->given($this->newTestedInstance())
-                    ->if($this->testedInstance->login = uniqid("user_", true))
-                    ->if($this->testedInstance->password = 'foo')
-                    ->if($this->testedInstance->role = 'student')
-                    ->if($this->testedInstance->first_name = 'bad')
-                    ->if($this->testedInstance->last_name = 'boy')
+                    ->if($this->testedInstance->login = self::login())
+                    ->if($this->testedInstance->password = self::DEFAULT_PASSWORD)
+                    ->if($this->testedInstance->role = self::STUDENT_ROLE)
+                    ->if($this->testedInstance->first_name = self::DEFAULT_FIRST_NAME)
+                    ->if($this->testedInstance->last_name = self::DEFAULT_LAST_NAME)
                     ->if($this->testedInstance->date_of_birth = self::DEFAULT_DATE)
                     ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
                     ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
@@ -246,11 +251,11 @@ namespace website\model\tests\units {
                     ->boolean($this->testedInstance->save())
                         ->isTrue()
                 ->given($this->newTestedInstance())
-                    ->if($this->testedInstance->login = uniqid("user_", true))
-                    ->if($this->testedInstance->password = 'foo')
-                    ->if($this->testedInstance->role = 'student')
-                    ->if($this->testedInstance->first_name = 'bad')
-                    ->if($this->testedInstance->last_name = 'boy')
+                    ->if($this->testedInstance->login = self::login())
+                    ->if($this->testedInstance->password = self::DEFAULT_PASSWORD)
+                    ->if($this->testedInstance->role = self::STUDENT_ROLE)
+                    ->if($this->testedInstance->first_name = self::DEFAULT_FIRST_NAME)
+                    ->if($this->testedInstance->last_name = self::DEFAULT_LAST_NAME)
                     ->if($this->testedInstance->date_of_birth = self::DEFAULT_DATE)
                     ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
                     ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
@@ -275,11 +280,11 @@ namespace website\model\tests\units {
             array_map(function($mail){
                 $this
                 ->given($this->newTestedInstance())
-                    ->if($this->testedInstance->login = uniqid("user_", true))
+                    ->if($this->testedInstance->login = self::login())
                     ->if($this->testedInstance->password = 'foo')
                     ->if($this->testedInstance->role = 'student')
-                    ->if($this->testedInstance->first_name = 'bad')
-                    ->if($this->testedInstance->last_name = 'boy')
+                    ->if($this->testedInstance->first_name = self::DEFAULT_FIRST_NAME)
+                    ->if($this->testedInstance->last_name = self::DEFAULT_LAST_NAME)
                     ->if($this->testedInstance->date_of_birth = self::DEFAULT_DATE)
                     ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
                     ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
@@ -302,11 +307,11 @@ namespace website\model\tests\units {
             array_map(function($mail){
                 $this
                 ->given($this->newTestedInstance())
-                    ->if($this->testedInstance->login = uniqid("user_", true))
+                    ->if($this->testedInstance->login = self::login())
                     ->if($this->testedInstance->password = 'foo')
-                    ->if($this->testedInstance->role = 'student')
-                    ->if($this->testedInstance->first_name = 'bad')
-                    ->if($this->testedInstance->last_name = 'boy')
+                    ->if($this->testedInstance->role = self::STUDENT_ROLE)
+                    ->if($this->testedInstance->first_name = self::DEFAULT_FIRST_NAME)
+                    ->if($this->testedInstance->last_name = self::DEFAULT_LAST_NAME)
                     ->if($this->testedInstance->date_of_birth = self::DEFAULT_DATE)
                     ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
                     ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
@@ -326,7 +331,12 @@ namespace website\model\tests\units {
             }, $bad_mailaddresses);
         }
 
-        public function mailAddress()
+        public static function login()
+        {
+            return uniqid("user_", true);
+        }
+
+        public static function mailAddress()
         {
             return uniqid("mail", true) . "@mail.com";
         }
