@@ -35,7 +35,7 @@ $coverageHtmlField = new atoum\report\fields\runner\coverage\html('markattaks', 
 /*
 Please replace in next line http://url/of/web/site by the root url of your code coverage web site.
 */
-$coverageHtmlField->setRootUrl('http://url/of/web/site');
+$coverageHtmlField->setRootUrl('http://m2gl.deptinfo-st.univ-fcomte.fr:9080/jenkins/job/MarkAttacks%20(w-o%20Squash%20TA)/PHP_Coverage');
 
 // Treemap (not mandatory)
 
@@ -48,7 +48,7 @@ $coverageTreemapField = new atoum\report\fields\runner\coverage\treemap('markatt
 Please replace in next line http://url/of/treemap by the root url of your treemap web site.
 */
 $coverageTreemapField
-    ->setTreemapUrl('http://url/of/treemap')
+    ->setTreemapUrl('http://m2gl.deptinfo-st.univ-fcomte.fr:9080/jenkins/job/MarkAttacks%20(w-o%20Squash%20TA)/PHP_Coverage_treemap')
     ->setHtmlReportBaseUrl($coverageHtmlField->getRootUrl())
 ;
 
