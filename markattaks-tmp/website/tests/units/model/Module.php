@@ -170,7 +170,15 @@ namespace website\model\tests\units {
                         ->message
                             ->contains('bad code length');
             }
+        }
 
+        public function testTableName()
+        {
+            $this
+            ->given($tablename = \website\model\Module::tableName())
+            ->then
+                ->string($tablename)
+                    ->isEqualTo('MODULE');
         }
 
         public static function name()

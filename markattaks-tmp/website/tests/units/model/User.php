@@ -331,6 +331,15 @@ namespace website\model\tests\units {
             }, $bad_mailaddresses);
         }
 
+        public function testTableName()
+        {
+            $this
+            ->given($tablename = \website\model\User::tableName())
+            ->then
+                ->string($tablename)
+                    ->isEqualTo('USER');
+        }
+
         public static function login()
         {
             return uniqid("user_", true);
