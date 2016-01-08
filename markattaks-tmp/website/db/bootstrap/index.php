@@ -4,10 +4,16 @@ require_once 'autoload.php';
 use website\Common;
 use \website\model\User;
 use \website\utils\Password;
+use \website\model\Module;
+use \website\model\StudentModuleSubscription;
 
 $common = Common::getInstance();
 
+$common->db()->beginTransaction();
+
 $common->db()->exec('DELETE FROM ' . User::tableName());
+$common->db()->exec('DELETE FROM ' . Module::tableName());
+$common->db()->exec('DELETE FROM ' . StudentModuleSubscription::tableName());
 
 $bananaHashed = Password::hash('banana', false);
 
@@ -46,3 +52,32 @@ $student->date_of_birth = '2000-01-01';
 $student->phone = '000';
 $student->email = 'franklin@mail.com';
 $student->save();
+
+
+$module1 = new Module();
+$module1->name = 'math';
+$module1->code = 'math00';
+$module1->coefficient = 2;
+$module1->save();
+
+$module2 = new Module();
+$module2->name = 'gym';
+$module2->code = 'gym00';
+$module2->coefficient = 1;
+$module2->save();
+
+$studentSub1 = new StudentModuleSubscription();
+$studentSub1->user_id = $student->getId();
+$studentSub1->module_id = $module1->getId();
+$studentSub1->mark = 18;
+$studentSub1->save();
+
+
+$studentSub2 = new StudentModuleSubscription();
+$studentSub2->user_id = $student->getId();
+$studentSub2->module_id = $module2->getId();
+$studentSub2->mark = 2;
+$studentSub2->save();
+
+
+$common->db()->commit();
