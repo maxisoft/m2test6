@@ -100,13 +100,12 @@ namespace website\model\tests\units {
             ->then
                 ->boolean($this->testedInstance->save())
                     ->isTrue()
+                ->boolean($this->testedInstance->hasChanges())
+                    ->isFalse()
                 ->given($dbTestedInstCopy = \website\model\Module::findOneWhere(['id' => $this->testedInstance->getId()]))
                 ->then
                     ->object($dbTestedInstCopy)
                         ->isEqualTo($this->testedInstance)
-                    ->variable($this->testedInstance->getDescription())
-                        ->isNull()
-
             ;
         }
 

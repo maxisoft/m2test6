@@ -52,11 +52,21 @@ class StudentModuleSubscription extends BaseObject
 
     public function validate()
     {
-        if (!(0 <= $this->getMark() && $this->getMark() <= 20)){
+        if (!is_null($this->getMark()) && !self::isUndef($this->getMark()) &&
+            !(0 <= $this->getMark() && $this->getMark() <= 20)){
             throw new \RangeException("mark must be between 0 and 20");
         }
         return true;
     }
+
+    public function onInsert()
+    {
+        if(self::isUndef($this->getMark())) {
+            $this->mark = null;
+        }
+        parent::onInsert();
+    }
+
 
     public static function tableName()
     {
