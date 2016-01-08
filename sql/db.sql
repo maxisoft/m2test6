@@ -149,17 +149,18 @@ DROP VIEW IF EXISTS `m2test6`.`MODULE_STATS` ;
 DROP TABLE IF EXISTS `m2test6`.`MODULE_STATS`;
 USE `m2test6`;
 CREATE  OR REPLACE VIEW `MODULE_STATS` AS
-	SELECT 
-		module.id AS module_id,
-		AVG(mark) AS average,
-		MIN(mark) AS min_mark,
-		MAX(mark) AS max_mark,
-		STD(mark) AS standard_deviation
-	FROM
-		MODULE module
-			LEFT OUTER JOIN
-		STUDENT_MODULE_SUBSCRIPTION ON id = module_id
-	GROUP BY module.id;
+	SELECT
+        module.id AS module_id,
+        AVG(mark) AS average,
+        MIN(mark) AS min_mark,
+        MAX(mark) AS max_mark,
+        STD(mark) AS standard_deviation,
+        count(mark) AS student_count
+    FROM
+        MODULE module
+            LEFT OUTER JOIN
+        STUDENT_MODULE_SUBSCRIPTION ON id = module_id
+    GROUP BY module.id;
 
 -- -----------------------------------------------------
 -- View `m2test6`.`STUDENT_STATS`
@@ -168,7 +169,7 @@ DROP VIEW IF EXISTS `m2test6`.`STUDENT_STATS` ;
 DROP TABLE IF EXISTS `m2test6`.`STUDENT_STATS`;
 USE `m2test6`;
 CREATE  OR REPLACE VIEW `STUDENT_STATS` AS
-    SELECT 
+    SELECT
         user.id,
         SUM(module.coefficient * mark) / SUM(module.coefficient) AS average
     FROM

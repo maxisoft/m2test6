@@ -6,14 +6,16 @@ use \website\model\User;
 use \website\utils\Password;
 use \website\model\Module;
 use \website\model\StudentModuleSubscription;
+use \website\model\TeacherModuleSubscription;
 
 $common = Common::getInstance();
 
 $common->db()->beginTransaction();
 
+$common->db()->exec('DELETE FROM ' . StudentModuleSubscription::tableName());
+$common->db()->exec('DELETE FROM ' . TeacherModuleSubscription::tableName());
 $common->db()->exec('DELETE FROM ' . User::tableName());
 $common->db()->exec('DELETE FROM ' . Module::tableName());
-$common->db()->exec('DELETE FROM ' . StudentModuleSubscription::tableName());
 
 $bananaHashed = Password::hash('banana', false);
 
