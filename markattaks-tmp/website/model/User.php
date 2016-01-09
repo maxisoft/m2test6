@@ -19,6 +19,7 @@ class User extends IdBasedObject
     protected $address;
     protected $phone;
     protected $email;
+    protected $valid;
 
 
     /**
@@ -97,6 +98,16 @@ class User extends IdBasedObject
     {
         return $this->email;
     }
+
+    /**
+     * @return mixed
+     */
+    public function isValid()
+    {
+        return $this->valid;
+    }
+
+
 
     public function validate()
     {

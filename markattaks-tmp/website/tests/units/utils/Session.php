@@ -56,6 +56,7 @@ namespace website\utils\tests\units {
             $user->address = 'nohere';
             $user->phone = '0000';
             $user->email = '0000@lol.com';
+            $user->valid = true;
             return $user;
         }
 

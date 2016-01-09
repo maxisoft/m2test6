@@ -11,6 +11,7 @@ class Module extends IdBasedObject
     protected $code;
     protected $coefficient;
     protected $description;
+    protected $valid;
 
     /**
      * @return mixed
@@ -42,6 +43,15 @@ class Module extends IdBasedObject
     public function getDescription()
     {
         return $this->description;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function isValid()
+    {
+        return $this->valid;
     }
 
     public function onInsert()

@@ -128,6 +128,7 @@ namespace website\model\tests\units {
             $module = new \website\model\Module();
             $module->name = \website\model\tests\units\Module::name();
             $module->code = \website\model\tests\units\Module::code();
+            $module->valid = true;
             $module->coefficient = 2;
             return $module;
         }
@@ -144,6 +145,7 @@ namespace website\model\tests\units {
             $user->phone = '0000';
             $user->role = 'teacher';
             $user->email = \website\model\tests\units\User::mailAddress();
+            $user->valid = true;
             return $user;
         }
     }

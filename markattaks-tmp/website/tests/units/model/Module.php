@@ -82,6 +82,7 @@ namespace website\model\tests\units {
                     ->if($this->testedInstance->code = self::code())
                     ->if($this->testedInstance->coefficient = 2)
                     ->if($this->testedInstance->description = '')
+                    ->if($this->testedInstance->valid = true)
                 ->then
                     ->boolean($this->allSqlPropertiesNotUndef($this->testedInstance))  //assert that all properties filled
                         ->isTrue()
@@ -97,6 +98,7 @@ namespace website\model\tests\units {
                 ->if($this->testedInstance->name = self::name())
                 ->if($this->testedInstance->code = self::code())
                 ->if($this->testedInstance->coefficient = 2)
+                ->if($this->testedInstance->valid = true)
             ->then
                 ->boolean($this->testedInstance->save())
                     ->isTrue()
@@ -119,6 +121,7 @@ namespace website\model\tests\units {
                 ->if($this->testedInstance->code = $code)
                 ->if($this->testedInstance->coefficient = 2)
                 ->if($this->testedInstance->description = '')
+                ->if($this->testedInstance->valid = true)
             ->then
                 ->boolean($this->testedInstance->save())
                     ->isTrue()
@@ -127,6 +130,7 @@ namespace website\model\tests\units {
                     ->if($this->testedInstance->code = $code)
                     ->if($this->testedInstance->coefficient = 2)
                     ->if($this->testedInstance->description = '')
+                    ->if($this->testedInstance->valid = true)
                 ->then
                     ->exception(function(){$this->testedInstance->save();})
                         ->isInstanceOf('PDOException')
@@ -146,6 +150,7 @@ namespace website\model\tests\units {
                     ->if($this->testedInstance->code = str_repeat('9', $len))
                     ->if($this->testedInstance->coefficient = 2)
                     ->if($this->testedInstance->description = '')
+                    ->if($this->testedInstance->valid = true)
                 ->then
                     ->boolean($this->testedInstance->save())
                         ->isTrue();
@@ -163,6 +168,7 @@ namespace website\model\tests\units {
                     ->if($this->testedInstance->code = str_repeat('9', $len))
                     ->if($this->testedInstance->coefficient = 2)
                     ->if($this->testedInstance->description = '')
+                    ->if($this->testedInstance->valid = true)
                 ->then
                     ->exception(function(){$this->testedInstance->save();})
                         ->isInstanceOf('RuntimeException')

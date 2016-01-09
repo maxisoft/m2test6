@@ -168,6 +168,7 @@ namespace website\model\tests\units {
             $module->name = \website\model\tests\units\Module::name();
             $module->code = \website\model\tests\units\Module::code();
             $module->coefficient = 2;
+            $module->valid = true;
             return $module;
         }
 
@@ -183,6 +184,7 @@ namespace website\model\tests\units {
             $user->phone = '0000';
             $user->role = 'student';
             $user->email = \website\model\tests\units\User::mailAddress();
+            $user->valid = true;
             return $user;
         }
     }

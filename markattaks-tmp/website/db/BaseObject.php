@@ -244,7 +244,7 @@ abstract class BaseObject
 
     public function toArray()
     {
-        $properties = &get_class_vars(get_class($this));
+        $properties = get_class_vars(get_class($this));
         $ret = array();
         foreach ($properties as $name => &$value) {
             if ((self::isSqlPropertyMapping($name) && !self::isUndef($this->$name))) {

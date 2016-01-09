@@ -107,6 +107,7 @@ namespace website\model\tests\units {
             $student->date_of_birth = '2000-01-01';
             $student->phone = '000';
             $student->email = 'franklin@mail.com';
+            $student->valid = true;
             $student->save();
 
 
@@ -114,12 +115,14 @@ namespace website\model\tests\units {
             $module1->name = 'math';
             $module1->code = 'math00';
             $module1->coefficient = 2;
+            $module1->valid = true;
             $module1->save();
 
             $module2 = new \website\model\Module();
             $module2->name = 'gym';
             $module2->code = 'gym00';
             $module2->coefficient = 1;
+            $module2->valid = true;
             $module2->save();
 
             $studentSub1 = new \website\model\StudentModuleSubscription();
@@ -158,6 +161,7 @@ namespace website\model\tests\units {
             $student->date_of_birth = '2000-01-01';
             $student->phone = '000';
             $student->email = 'franklin@mail.com';
+            $student->valid = true;
             $student->save();
 
             $student2 = new \website\model\User();
@@ -170,6 +174,7 @@ namespace website\model\tests\units {
             $student2->date_of_birth = '2000-01-01';
             $student2->phone = '000';
             $student2->email = 'franklin2@mail.com';
+            $student2->valid = true;
             $student2->save();
 
 
@@ -177,12 +182,14 @@ namespace website\model\tests\units {
             $module1->name = 'math';
             $module1->code = 'math00';
             $module1->coefficient = 2;
+            $module1->valid = true;
             $module1->save();
 
             $module2 = new \website\model\Module();
             $module2->name = 'gym';
             $module2->code = 'gym00';
             $module2->coefficient = 1;
+            $module2->valid = true;
             $module2->save();
 
             $studentSub1 = new \website\model\StudentModuleSubscription();

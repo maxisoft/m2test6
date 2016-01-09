@@ -94,6 +94,7 @@ namespace website\model\tests\units {
                 ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
                 ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
                 ->if($this->testedInstance->email = $this->mailAddress())
+                ->if($this->testedInstance->valid = true)
             ->then
                 ->boolean($this->allSqlPropertiesNotUndef($this->testedInstance))  //assert that all properties filled
                     ->isTrue()
@@ -114,6 +115,7 @@ namespace website\model\tests\units {
                 ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
                 ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
                 ->if($this->testedInstance->email = $this->mailAddress())
+                ->if($this->testedInstance->valid = true)
             ->then
                 ->exception(function(){
                         $this->testedInstance->save();
@@ -136,6 +138,7 @@ namespace website\model\tests\units {
                 ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
                 ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
                 ->if($this->testedInstance->email = $this->mailAddress())
+                ->if($this->testedInstance->valid = true)
             ->then
                 ->boolean($this->testedInstance->save())
                     ->isTrue()
@@ -149,6 +152,7 @@ namespace website\model\tests\units {
                     ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
                     ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
                     ->if($this->testedInstance->email = $this->mailAddress())
+                    ->if($this->testedInstance->valid = true)
                 ->then
                     ->exception(function(){
                         $this->testedInstance->save();
@@ -194,6 +198,7 @@ namespace website\model\tests\units {
                 ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
                 ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
                 ->if($this->testedInstance->email = $this->mailAddress())
+                ->if($this->testedInstance->valid = true)
             ->then
                 ->boolean($this->testedInstance->save())
                     ->isTrue()
@@ -228,6 +233,7 @@ namespace website\model\tests\units {
                 ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
                 ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
                 ->if($this->testedInstance->email = $email)
+                ->if($this->testedInstance->valid = true)
             ->then
                 ->boolean($this->testedInstance->save())
                     ->isTrue();
@@ -247,6 +253,7 @@ namespace website\model\tests\units {
                     ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
                     ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
                     ->if($this->testedInstance->email = $email)
+                    ->if($this->testedInstance->valid = true)
                 ->then
                     ->boolean($this->testedInstance->save())
                         ->isTrue()
@@ -260,6 +267,7 @@ namespace website\model\tests\units {
                     ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
                     ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
                     ->if($this->testedInstance->email = $email)
+                    ->if($this->testedInstance->valid = true)
                 ->then
                     ->exception(function(){
                         $this->testedInstance->save();
@@ -289,6 +297,7 @@ namespace website\model\tests\units {
                     ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
                     ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
                     ->if($this->testedInstance->email = $mail)
+                    ->if($this->testedInstance->valid = true)
                 ->then
                 ->exception(function(){$this->testedInstance->save();})
                     ->isInstanceOf('PDOException')
@@ -316,6 +325,7 @@ namespace website\model\tests\units {
                     ->if($this->testedInstance->address = self::DEFAULT_ADDRESS)
                     ->if($this->testedInstance->phone = self::DEFAULT_PHONE_NUMBER)
                     ->if($this->testedInstance->email = $this->mailAddress())
+                    ->if($this->testedInstance->valid = true)
                 ->then
                     ->boolean($this->testedInstance->save())
                         ->isTrue()
