@@ -30,7 +30,7 @@ class Session implements \ArrayAccess
         if ($this->isLogged()) {
             return null;
         }
-        $user = User::findOneWhere(['login' => $login], null, ['id', 'login', 'password']);
+        $user = User::findOneWhere(['login' => $login, 'valid' => true], null, ['id', 'login', 'password']);
         if (!is_null($user) && Password::verify($password, $user->getPassword())) {
             $this['user.id'] = $user->getId();
             return true;

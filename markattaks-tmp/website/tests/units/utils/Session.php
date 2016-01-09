@@ -20,6 +20,7 @@ namespace website\utils\tests\units {
             DB::init();
             $this->cleanDB();
             $this->newUser()->save();
+            $this->newNotValidedUser()->save();
         }
 
         public function tearDown()
@@ -60,6 +61,21 @@ namespace website\utils\tests\units {
             return $user;
         }
 
+        private static function newNotValidedUser()
+        {
+            $user = new User();
+            $user->login = "totoInv";
+            $user->password = \website\utils\Password::hash("banana", false);
+            $user->first_name = 'toto';
+            $user->last_name = 'toto';
+            $user->date_of_birth = '2000-01-01';
+            $user->address = 'nohere';
+            $user->phone = '0000';
+            $user->email = '0001@lol.com';
+            $user->valid = 0;
+            return $user;
+        }
+
         public function testLogin()
         {
             $this
@@ -70,7 +86,29 @@ namespace website\utils\tests\units {
             ;
         }
 
-        public function testLoginFail()
+        public function testLoginFailWithNotValidUser()
+        {
+
+            $this
+            ->given($this->newTestedInstance())
+            ->then
+                ->boolean($this->testedInstance->login("totoInv", "banana"))
+                    ->isFalse()
+            ;
+        }
+
+        public function testLoginFailWithBadUser()
+        {
+
+            $this
+            ->given($this->newTestedInstance())
+            ->then
+                ->boolean($this->testedInstance->login("toto5162", "apple"))
+                    ->isFalse()
+            ;
+        }
+
+        public function testLoginFailWithBadPassword()
         {
 
             $this
